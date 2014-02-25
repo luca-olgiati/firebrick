@@ -1,2 +1,2 @@
-firebrick
+group firebrick, readme
 =========
