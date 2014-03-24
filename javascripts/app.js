@@ -27,21 +27,21 @@ Ext.onReady(function() {
 */
 Ext.application({
 	name: 'Atlas Project in Multimedia Cartography',
-	
+
 	// The launch function is called after the page is loaded. Describes the appearance and behaviour of the atlas user interface.
 	launch: function() {
-		
+
 		// This function is used for loading maps
 		function sendMessage(msg) {
 			var iframe = Ext.get('map').dom;
-			
+
 			function loadMap() {
 				if (params.data) {
 					var win = iframe.contentWindow;
 					win.postMessage({ method: 'loadMap', params: params }, '*');
 				}
 			}
-			
+
 			switch (msg.method) {
 				case 'loadMap':
 				var params = content[msg.id];
@@ -60,7 +60,7 @@ Ext.application({
 				break;
 			}
 		}
-		
+
 		// Displays a document in a child window.
 		function createChildWindow(parentId, title, src) {
 			var parent = Ext.get(parentId);
@@ -109,9 +109,9 @@ Ext.application({
 				break;
 			}
 	    });
-		
+
 		var currentMapId;
-		
+
 		// Atlas contents: lists all map ids, resources and parameters, if any.
 		// Every map of the atlas needs an entry.
 		var content = {
@@ -148,7 +148,7 @@ Ext.application({
 			ge_gas_network: { src: '../Maps/maps/google-earth/Gasnetz.html' },
 			airports: { src: '../Maps/maps/d3/USFlights.html' }
 		}
-		
+
 		// The viewport is the container for all interface elements.
 		Ext.create('Ext.container.Viewport', {
 			/* A border layout divides the viewport in 5 part: center, north, west, east, and south. */
@@ -320,13 +320,15 @@ Ext.application({
 			}, {
 				// The right panel presents the atlas contents with tabs.
 				region: 'east',
-				title: 'Special Touristic Information',
+				title: 'Atlas Contents',
 				collapsible: true,
 				resizable: true,
 				resizeHandles: 'w',
-				width: 260,
-				xtype: 'tabpanel',
 				activeTab: 0,
+				items: [{
+				width: 300,
+				minHeight: 350,
+				xtype: 'tabpanel',
 				items: [{
 					// The first tab presents a geographic atlas content as a tree.
 					title: 'Geographical Info',
@@ -405,7 +407,7 @@ Ext.application({
 							sendMessage({method: 'loadMap', id: rec.get('id')});
 						}
 					},
-					
+
 				}, /* {
 					// The second tab presents an alphabetic atlas content.
 					title: 'Alphabetic',
@@ -489,7 +491,7 @@ Ext.application({
 						}, {
 							text: 'Sports Centers',
 						}
-						
+
 						]
 					},
 					listeners: {
@@ -498,7 +500,13 @@ Ext.application({
 							sendMessage({method: 'loadMap', id: rec.get('id')});
 						}
 					},
-				}]
+				}]	
+					
+					},{
+					// The right panel presents the atlas contents with tabs.
+					title: 'Atlas Contents',
+					width: 300
+					}]
 			}, {
 				// We currently use the section.
 				region: 'south',
