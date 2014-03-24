@@ -117,6 +117,7 @@ Ext.application({
 		var content = {
 			osm_processed: { src: '../Maps/maps/mashups/osm/osm-imageprocessed.html' },
 			osm_restricted: { src: '../Maps/maps/mashups/osm/osm-restricted.html' },
+			//mapquest: { src: '../Maps/maps/mashups/osm/mapquest.html' },// It is not done yet
 			google: { src: '../Maps/maps/mashups/googlemaps/googlemap.html' },
 			bing: { src: '../Maps/maps/mashups/bing/bingmaps.html' },
 			interaction: { src: '../Maps/maps/vector-maps/interaction.html' },
@@ -155,26 +156,49 @@ Ext.application({
 			items: [{
 				// A toolbar is placed at the top.
 				region: 'north',
+				html: '<h2 class="x-pamel-header">Touristic Atlas of Europe</h2>',
 				xtype: 'toolbar',
+				height: 60,
 				// Toolbar menus follow here.
-				items: [{
+				items: [{ xtype: 'tbfill' },
+						{
 					// First menu is about this atlas project.
-					id: 'aboutAtlas',
-					text: 'Atlas Project',
+					id: 'aboutEurope',
+					text: 'Europe Maps',
 					xtype: 'splitbutton',
+					width: 200,
 					// Menu entries follow here.
 					menu: new Ext.menu.Menu({
 						items: [
 							// Imprint is the first menu entry.
 							{
-								text: 'Imprint...',
+								text: 'Price Level Map',
+								width: 200,
+								// This function is called when the menu item is selected.
+								handler: function() {
+									// We present the imprint document in a window.
+									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
+								}
+							},
+							{
+								text: 'Big-Mac Index Map',
+								width: 200,
+								// This function is called when the menu item is selected.
+								handler: function() {
+									// We present the imprint document in a window.
+									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
+								}
+							},
+							{
+								text: 'Temperature Map',
+								width: 200,
 								// This function is called when the menu item is selected.
 								handler: function() {
 									// We present the imprint document in a window.
 									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
 								}
 							}
-						]
+						]	
 					}),
 					// Listeners handle toolbar interactions.
 					listeners: {
@@ -184,11 +208,13 @@ Ext.application({
 							createChildWindow('map', 'About this Atlas', 'resources/html/about.html');
 						}
 					},
-				}, {
+				},
+				{
 					// Next menu is a map menu
-					id: 'aboutMap',
-					text: 'Map',
-					xtype: 'splitbutton',
+					id: 'Culture Map',
+					text: 'Bern Map',
+					width: 200,
+					/*xtype: 'splitbutton',
 					menu: new Ext.menu.Menu({
 						items: [
 							{
@@ -208,7 +234,7 @@ Ext.application({
 								}
 							}
 				        ]
-				    }),
+				    }),*/
 					listeners: {
 						// We present extra information about the current map.
 						click: function(view, rec, item, index, eventObj) {
@@ -218,20 +244,92 @@ Ext.application({
 							createChildWindow('map', 'About this Map', infoName);
 						}
 					},
-				}],
+				},
+				{
+					// Next menu is a map menu
+					id: 'Winter Map',
+					text: 'Saas-Fee Map',
+					width: 200,					
+					/*xtype: 'splitbutton',
+					menu: new Ext.menu.Menu({
+						items: [
+							{
+								text: 'Open Map in New Window...',
+								handler: function() {
+									// We present the current map in a new browser window.
+									var url = Ext.get('map').dom.src;
+									window.open(url, url, 'scrollbars=yes,location=no', false);
+								}
+							},
+							{
+								text: 'Show Map URL',
+								handler: function() {
+									// We show the URL of the current map.
+									var url = Ext.get('map').dom.src;
+									alert('URL: ' + url);
+								}
+							}
+				        ]
+				    }),*/
+					listeners: {
+						// We present extra information about the current map.
+						click: function(view, rec, item, index, eventObj) {
+							// If the map file name is 'map.html', an info file 'map_info.html' is expected in the same directory.
+							var mapName = content[currentMapId].src;
+							var infoName = mapName.substr(0, mapName.lastIndexOf('.')) + '_info.html';
+							createChildWindow('map', 'About this Map', infoName);
+						}
+					},
+				}, 
+				{
+					// Next menu is a map menu
+					id: 'Summer Map',
+					text: 'Corfu Map',
+					width: 200,					
+					/*xtype: 'splitbutton',
+					menu: new Ext.menu.Menu({
+						items: [
+							{
+								text: 'Open Map in New Window...',
+								handler: function() {
+									// We present the current map in a new browser window.
+									var url = Ext.get('map').dom.src;
+									window.open(url, url, 'scrollbars=yes,location=no', false);
+								}
+							},
+							{
+								text: 'Show Map URL',
+								handler: function() {
+									// We show the URL of the current map.
+									var url = Ext.get('map').dom.src;
+									alert('URL: ' + url);
+								}
+							}
+				        ]
+				    }),*/
+					listeners: {
+						// We present extra information about the current map.
+						click: function(view, rec, item, index, eventObj) {
+							// If the map file name is 'map.html', an info file 'map_info.html' is expected in the same directory.
+							var mapName = content[currentMapId].src;
+							var infoName = mapName.substr(0, mapName.lastIndexOf('.')) + '_info.html';
+							createChildWindow('map', 'About this Map', infoName);
+						}
+					},
+				},],
 			}, {
-				// The left panel presents the atlas contents with tabs.
+				// The right panel presents the atlas contents with tabs.
 				region: 'east',
-				title: 'Atlas Contents',
+				title: 'Special Touristic Information',
 				collapsible: true,
 				resizable: true,
 				resizeHandles: 'w',
-				width: 300,
+				width: 260,
 				xtype: 'tabpanel',
 				activeTab: 0,
 				items: [{
 					// The first tab presents a geographic atlas content as a tree.
-					title: 'Geographic!',
+					title: 'Geographical Info',
 					xtype: 'treepanel',
 					layout: 'fit',
 					rootVisible: false,
@@ -239,7 +337,7 @@ Ext.application({
 						// The atlas content tree structure is defined here...
 						expanded: true,
 						children: [{
-							text: 'World', expanded: true, children: [{
+							text: 'Base Map Selection', expanded: true, children: [{
 								// A leaf indicates a map. Make sure you use a unique id and provide an entry in the 'content' object.
 								id: 'google',
 								text: 'Google Map', leaf: true
@@ -253,6 +351,9 @@ Ext.application({
 								id: 'wms_world',
 								text: 'WMS Example', leaf: true
 							}, {
+								id: 'map_quest',
+								text: 'MapQuest Open', leaf: true
+							}, /* {
 								text: 'Europe', expanded: true, children: [{
 									text: 'Switzerland', expanded: true, children: [{
 										id: 'osm_restricted',
@@ -287,7 +388,7 @@ Ext.application({
 									id: 'ge_gas_network',
 									text: "Gas Network", leaf: true
 								}]
-							}/**, {
+							} *//**, {
 								text: 'North America', expanded: true, children: [{
 									text: 'USA', expanded: true, children: [{
 										id: 'airports',
@@ -305,7 +406,7 @@ Ext.application({
 						}
 					},
 					
-				}, /**{
+				}, /* {
 					// The second tab presents an alphabetic atlas content.
 					title: 'Alphabetic',
 					xtype: 'treepanel',
@@ -333,23 +434,63 @@ Ext.application({
 							sendMessage({method: 'loadMap', id: rec.get('id')});
 						}
 					},
-				},*/ {
+				}, */{
 					// The third tab presents a thematic atlas content.
-					title: 'Thematic',
+					title: 'Cultural Info',
 					xtype: 'treepanel',
 					layout: 'fit',
 					rootVisible: false,
 					root: {
 						expanded: true,
 						children: [{
-							text: 'Population', expanded: true, children: [{
-								id: 'foreigners',
-								text: 'Foreigners', leaf: true
+							text: 'Unesco Area', expanded: true, children: [{
+								id: 'Unesco_Information',
+								text: 'Area Information', leaf: true
 							}, {
-								id: 'male_female',
-								text: 'Male/Female', leaf: true
+								id: 'Unesco_History',
+								text: 'History', leaf: true
 							}]
-						}]
+						}, 
+						{
+							text: 'Events Calendar', expanded: true, children: [{
+								id: 'Unesco_Information',
+								text: 'Area Information', leaf: true
+							}, {
+								id: 'Unesco_History',
+								text: 'History', leaf: true
+							}]
+						}, {
+							text: 'Arts', expanded: true, children: [{
+								id: 'Museums',
+								text: 'Museums', leaf: true
+							}, {
+								id: 'Art_Centers',
+								text: 'Art Centers', leaf: true
+							}, {
+								id: 'Libraries',
+								text: 'Libraries', leaf: true
+							}, {
+								id: 'Cinemas',
+								text: 'Cinemas', leaf: true
+							}, {
+								id: 'Theaters',
+								text: 'Theaters', leaf: true
+							}]
+						}, {
+							text: 'Historic Points', expanded: true, children: [{
+								id: 'Archaelogical_Sites',
+								text: 'Archaelogical Sites', leaf: true
+							}, {
+								id: 'Memorials',
+								text: 'Memorials', leaf: true
+							}]
+						}, {
+							text: 'Places of worship',
+						}, {
+							text: 'Sports Centers',
+						}
+						
+						]
 					},
 					listeners: {
 						itemclick: function(view, rec, item, index, eventObj) {
@@ -359,18 +500,52 @@ Ext.application({
 					},
 				}]
 			}, {
-				// We currentyl do not use the section.
+				// We currently use the section.
 				region: 'south',
-				title: 'Map Information',
+				xtype: 'panel',//
+				/* JPanel buttonBar = new JPanel();
+				buttonBar.setLayout( (new GridLayout(1,3) );
+				buttonBar.add(button1);
+				buttonBar.add(button1);
+				buttonBar.add(button1); */
+				//panel.add(button1);
+				title: 'Standard Touristic Information',
 				collapsible: true,
-				resizable: true,
+				resizable: false,
 				resizeHandles: 'n',
-				height: 24,
-				border: false,
-				items: [{
-					id: 'map-info',
-					xtype: 'component'
-				}],
+				height: 60,
+				border: true,//
+				items: [
+				{
+					id: 'map-Attractions',
+					text: 'Attractions',
+					xtype: 'button',//component
+					width: 255
+				},
+				{
+					id: 'map-Hotels',
+					text: 'Hotels',
+					xtype: 'button',//component
+					width: 256
+				},
+				{
+					id: 'map-Food',
+					text: 'Food',
+					xtype: 'button',//component
+					width: 256
+				},
+				{
+					id: 'map-Cafes-Bars',
+					text: 'Cafes-Bars',
+					xtype: 'button',//component
+					width: 256
+				},
+				{
+					id: 'map-Stations',
+					text: 'Stations',
+					xtype: 'button',//component
+					width: 255
+				},],
 				renderTo: Ext.getBody()
 			}, {
 				// The map finally is presented in the center as an 'iframe', an embedded element.
