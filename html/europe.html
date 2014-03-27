@@ -134,10 +134,10 @@ function init() {
 	map = new OpenLayers.Map(options);
 	
 	var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	//map.addLayer(day);	
+	var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
 	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', {
 	style: { fillColor: '#ff8', fillOpacity: 0.5, strokeColor: '#f33', strokeWidth: 1.0, strokeOpacity: 1 } });
-	map.addLayers([day,polygons]);
+	map.addLayers([day,var,polygons]);
 
 	var hilite = {
 	selectStyle: { strokeColor: 'none', fillColor: '#fff', fillOpacity: 0.8 },
