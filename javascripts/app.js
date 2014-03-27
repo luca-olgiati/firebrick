@@ -146,7 +146,8 @@ Ext.application({
 			ge_activity_rate: { src: '../Maps/maps/google-earth/Erwerb.html' },
 			ge_cantons: { src: '../Maps/maps/google-earth/Kantone.html' },
 			ge_gas_network: { src: '../Maps/maps/google-earth/Gasnetz.html' },
-			airports: { src: '../Maps/maps/d3/USFlights.html' }
+			airports: { src: '../Maps/maps/d3/USFlights.html' },
+			europe_map: { src: '../Maps/maps/europe/europe.html' }
 		}
 
 		// The viewport is the container for all interface elements.
@@ -175,38 +176,43 @@ Ext.application({
 								text: 'Price Level Map',
 								width: 200,
 								// This function is called when the menu item is selected.
-								handler: function() {
-									// We present the imprint document in a window.
-									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
+								listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'europe_map'});
+									}
 								}
 							},
 							{
 								text: 'Big-Mac Index Map',
 								width: 200,
 								// This function is called when the menu item is selected.
-								handler: function() {
-									// We present the imprint document in a window.
-									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
+								listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'europe_map'});
+									}
 								}
 							},
 							{
 								text: 'Temperature Map',
 								width: 200,
 								// This function is called when the menu item is selected.
-								handler: function() {
-									// We present the imprint document in a window.
-									createBrowserWindow('map', 'Imprint', 'resources/html/imprint.html');
+								listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'europe_map'});
+									}
 								}
 							}
 						]	
 					}),
 					// Listeners handle toolbar interactions.
 					listeners: {
-						// Handles click event in the toolbar item.
-						click: function(view, rec, item, index, eventObj) {
-							// We present an 'about' document in a window.
-							createChildWindow('map', 'About this Atlas', 'resources/html/about.html');
-						}
+							// A click on a tree menu item start the loading of a map.
+							click: function(view, rec, item, index, eventObj) {
+								sendMessage({method: 'loadMap', id: 'europe_map'});
+									}
 					},
 				},
 				{
