@@ -164,7 +164,7 @@ Ext.application({
 				items: [{ xtype: 'tbfill' },
 						{
 					// First menu is about this atlas project.
-					id: 'aboutEurope',
+					id: 'europe-map',
 					text: 'Europe Maps',
 					xtype: 'splitbutton',
 					width: 200,
