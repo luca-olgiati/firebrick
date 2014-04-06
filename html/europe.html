@@ -31,16 +31,23 @@
 
 
  var  map, drawControls, selectControl, selectedFeature;
-        function onPopupClose(evt) {
-            selectControl.unselect(selectedFeature);
+        /*function onPopupClose(evt) {
+            //selectControl.unselect(selectedFeature);
         }
         function onFeatureSelect(feature) {
+		
             selectedFeature = feature;
-            popup = new OpenLayers.Popup.FramedCloud("chicken", 
-                                     feature.geometry.getBounds().getCenterLonLat(),
-                                     null,
-                                     "<div style='font-size:.8em'>Feature: " + feature.id +"<br>Area: " + feature.geometry.getArea()+"</div>",
-                                     null, true, onPopupClose);
+		//	var cw=new OpenLayers.Control.MousePosition().getCenterLonLat();
+		//	var cx=feature.geometry.getBounds().getCenterLonLat();
+		//	var cy = map.getLonLatFromPixel(e.xy);
+            popup = new OpenLayers.Popup.Anchored("", 
+                                    //new OpenLayers.Control.MousePosition(),
+									feature.geometry.getBounds().getCenterLonLat(),
+                                     //new OpenLayers.LonLat(9,50),
+									 new OpenLayers.Size(100,20),
+									 
+                                     "<div style='font-size:.8em'>" + feature.data.values.Full_name +"</div>",
+                                     null, false, onPopupClose);
             feature.popup = popup;
             map.addPopup(popup);
         }
@@ -50,8 +57,7 @@
             feature.popup = null;
         }    
 		
-		
-		
+		*/
 //newend
 
 			/** A convenient function that add vector layers to the map. 
@@ -90,30 +96,12 @@
 		function addVectorLayer(map, name, url, opts) {
 			var layer = new OpenLayers.Layer.Vector(name, opts);
 			getOpenLayersFeatures(url, function(vectors) {
-				if (opts.hilite) {
-					geom = layer;
-					for (var i = 0; i < vectors.length; ++i) {
-						var vector = vectors[i];
-						var nn = strip(vector.data.values.NAME);
-						$('<li/>').attr('id', vector.id).text(nn).appendTo(ul);
-					}
-					// Sort the list
-					var li = ul.children('li').get();
-					li.sort(function(a, b) {
-						return $(a).text().toUpperCase().localeCompare($(b).text().toUpperCase());
-					})
-					$.each(li, function(idx, itm) { ul.append(itm); });
-					// Enable selection
-					var control = new OpenLayers.Control.SelectFeature(layer, opts.hilite);
-					select = control;
-					map.addControl(control);
-					control.activate();
-				}
-				for (var i = 0; i < vectors.length; ++i) {
-					var vector = vectors[i];
-					//vector.geometry.transform(srcProj, dstProj);
-				}
+				
 				layer.addFeatures(vectors);
+				
+				
+				
+				
 			});
 			//map.addLayer(layer);
 			return layer;
@@ -126,35 +114,96 @@ function init() {
 	var options = {
 		div: 'map',
 		maxResolution: "auto",
- 		numZoomLevels: 2,
+ 		numZoomLevels: 3,
 		maxExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
 		restrictedExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
 
 	};
+	
+	
+	
+	
+	
+	
+	
+	
 	map = new OpenLayers.Map(options);
 	
 	var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
 	var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', {
-	style: { fillColor: '#ff8', fillOpacity: 0.5, strokeColor: '#f33', strokeWidth: 1.0, strokeOpacity: 1 } });
-	map.addLayers([day,var,polygons]);
-
-	var hilite = {
-	selectStyle: { strokeColor: 'none', fillColor: '#fff', fillOpacity: 0.8 },
-	};
-    
+	
+	//map.addLayer(day);	
+	
+	
+	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', { styleMap: new OpenLayers.StyleMap({
+        "default": new OpenLayers.Style({
+            strokeColor: "#FE9A2E",
+            strokeOpacity: 1,
+            strokeWidth: 1,
+            fillColor: "#FE9A2E",
+            fillOpacity: 0.5,
+            cursor: "pointer",			
+        }),
+        "temporary": new OpenLayers.Style({
+            strokeColor: "#FE9A2E",
+            strokeOpacity: 1,
+            strokeWidth: 1,
+            fillColor: "#FE9A2E",
+            fillOpacity: .8,
+            cursor: "pointer",
+			//label: "${Full_name}", //perhaps: http://gis.stackexchange.com/questions/29584/openlayers-attribute-substitution-failing-on-kml-file
+			label: "Testtext",
+			labelAlign: "cc",
+			fontColor: "#FFFFFF",
+			fontOpacity: 1,
+			fontFamily: "Arial",
+			fontSize: 24
+			
+        }),
+        "select": new OpenLayers.Style({
+            strokeColor: "#FE9A2E",
+            strokeOpacity: 1,
+            strokeWidth: 1,
+            fillColor: "#FF0000",
+            fillOpacity: 0.5,
+            graphicZIndex: 2,
+            cursor: "pointer"
+        })
+    })
+	});
+	
+	//polygons.styleMap.styles.temporary.defaultStyle.label = "Hiho";
+	
+	map.addLayers([day,elev,polygons]);
 
 	var layerswitch = new OpenLayers.Control.LayerSwitcher({'ascending':false}); 	
-	map.addControl(layerswitch); 	
+    map.addControl(layerswitch);
 	map.addControl(new OpenLayers.Control.MousePosition());
-
+	
+	
+	
+	
+	
+	
+	
+	
+	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
+				hover: true,// onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+                highlightOnly: true,
+				renderIntent: "temporary",
+            }
+			);
+			
 	selectControl = new OpenLayers.Control.SelectFeature(polygons,
-                {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
-				
-				
+                {renderIntent:"select", clickout: true});
+
+	map.addControl(highlightCtrl);
 	map.addControl(selectControl);
+	highlightCtrl.activate();
+	
 
 	selectControl.activate();
+
 	
 	layerswitch.maximizeControl();
 	map.zoomToMaxExtent();
