@@ -26,189 +26,225 @@
 
 
 
-// NEW
-
-
-
- var  map, drawControls, selectControl, selectedFeature;
-        /*function onPopupClose(evt) {
-            //selectControl.unselect(selectedFeature);
-        }
-        function onFeatureSelect(feature) {
-		
-            selectedFeature = feature;
-		//	var cw=new OpenLayers.Control.MousePosition().getCenterLonLat();
-		//	var cx=feature.geometry.getBounds().getCenterLonLat();
-		//	var cy = map.getLonLatFromPixel(e.xy);
-            popup = new OpenLayers.Popup.Anchored("", 
-                                    //new OpenLayers.Control.MousePosition(),
-									feature.geometry.getBounds().getCenterLonLat(),
-                                     //new OpenLayers.LonLat(9,50),
-									 new OpenLayers.Size(100,20),
-									 
-                                     "<div style='font-size:.8em'>" + feature.data.values.Full_name +"</div>",
-                                     null, false, onPopupClose);
-            feature.popup = popup;
-            map.addPopup(popup);
-        }
-        function onFeatureUnselect(feature) {
-            map.removePopup(feature.popup);
-            feature.popup.destroy();
-            feature.popup = null;
-        }    
-		
-		*/
-//newend
-
-			/** A convenient function that add vector layers to the map. 
-		function addVectorLayer(map, name, url, opts) {
-			var layer = new OpenLayers.Layer.Vector(name, opts);
-			getOpenLayersFeatures(url, function(vectors) {
-				if (opts.hilite) {
-					geom = layer;
-					for (var i = 0; i < vectors.length; ++i) {
-						var vector = vectors[i];
-						var nn = strip(vector.data.values.NAME);
-						$('<li/>').attr('id', vector.id).text(nn).appendTo(ul);
-					}
-					// Sort the list
-					var li = ul.children('li').get();
-					li.sort(function(a, b) {
-						return $(a).text().toUpperCase().localeCompare($(b).text().toUpperCase());
-					})
-					$.each(li, function(idx, itm) { ul.append(itm); });
-					// Enable selection
-					var control = new OpenLayers.Control.SelectFeature(layer, opts.hilite);
-					select = control;
-					map.addControl(control);
-					control.activate();
-				}
-				for (var i = 0; i < vectors.length; ++i) {
-					var vector = vectors[i];
-					//vector.geometry.transform(srcProj, dstProj);
-				}
-				layer.addFeatures(vectors);
-			});
-			map.addLayer(layer);
-		}
-		*/
-		/* A convenient function that add vector layers to the map. */
-		function addVectorLayer(map, name, url, opts) {
-			var layer = new OpenLayers.Layer.Vector(name, opts);
-			getOpenLayersFeatures(url, function(vectors) {
-				
-				layer.addFeatures(vectors);
-				
-				
-				
-				
-			});
-			//map.addLayer(layer);
-			return layer;
-		}
-
-
-function init() {
-	OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3; 
-	OpenLayers.Util.onImageLoadErrorColor = "transparent";
-	var options = {
-		div: 'map',
-		maxResolution: "auto",
- 		numZoomLevels: 3,
-		maxExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
-		restrictedExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
-
-	};
-	
-	
-	
-	
-	
-	
-	
-	
-	map = new OpenLayers.Map(options);
-	
-	var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	
-	//map.addLayer(day);	
-	
-	
-	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', { styleMap: new OpenLayers.StyleMap({
-        "default": new OpenLayers.Style({
-            strokeColor: "#FE9A2E",
-            strokeOpacity: 1,
-            strokeWidth: 1,
-            fillColor: "#FE9A2E",
-            fillOpacity: 0.5,
-            cursor: "pointer",			
-        }),
-        "temporary": new OpenLayers.Style({
-            strokeColor: "#FE9A2E",
-            strokeOpacity: 1,
-            strokeWidth: 1,
-            fillColor: "#FE9A2E",
-            fillOpacity: .8,
-            cursor: "pointer",
-			//label: "${Full_name}", //perhaps: http://gis.stackexchange.com/questions/29584/openlayers-attribute-substitution-failing-on-kml-file
-			label: "Testtext",
-			labelAlign: "cc",
-			fontColor: "#FFFFFF",
-			fontOpacity: 1,
-			fontFamily: "Arial",
-			fontSize: 24
+	var map;
+        		/* A convenient function that add vector layers to the map. */
+	function addVectorLayer(map, name, url, opts) {
+		var layer = new OpenLayers.Layer.Vector(name, opts);
+		getOpenLayersFeatures(url, function(vectors) {
 			
-        }),
-        "select": new OpenLayers.Style({
-            strokeColor: "#FE9A2E",
-            strokeOpacity: 1,
-            strokeWidth: 1,
-            fillColor: "#FF0000",
-            fillOpacity: 0.5,
-            graphicZIndex: 2,
-            cursor: "pointer"
-        })
-    })
-	});
+			layer.addFeatures(vectors);
+			
+			
+			
+			
+		});
+		//map.addLayer(layer);
+		return layer;
+	}
 	
-	//polygons.styleMap.styles.temporary.defaultStyle.label = "Hiho";
-	
-	map.addLayers([day,elev,polygons]);
+            function init(){
+			
+				OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3; 
+				OpenLayers.Util.onImageLoadErrorColor = "transparent";
+				var options = {
+					div: 'map',
+					maxResolution: "auto",
+					numZoomLevels: 4,
+					maxExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
+					restrictedExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
 
-	var layerswitch = new OpenLayers.Control.LayerSwitcher({'ascending':false}); 	
-    map.addControl(layerswitch);
-	map.addControl(new OpenLayers.Control.MousePosition());
-	
-	
-	
-	
-	
-	
-	
-	
-	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
-				hover: true,// onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
-                highlightOnly: true,
-				renderIntent: "temporary",
+				};
+				
+                map = new OpenLayers.Map(options);
+				
+
+                var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+				var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+				
+				
+					var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', { styleMap: new OpenLayers.StyleMap({
+						"default": new OpenLayers.Style({
+							strokeColor: "#FE9A2E",
+							strokeOpacity: 1,
+							strokeWidth: 1,
+							fillColor: "#FE9A2E",
+							fillOpacity: 0.5,
+							//cursor: "pointer",			
+						}),
+						"temporary": new OpenLayers.Style({
+							strokeColor: "#FE9A2E",
+							strokeOpacity: 1,
+							strokeWidth: 1,
+							fillColor: "#FE9A2E",
+							fillOpacity: .8,
+							//cursor: "pointer",
+							//label: "${Full_name}", //perhaps: http://gis.stackexchange.com/questions/29584/openlayers-attribute-substitution-failing-on-kml-file
+							//label: "Testtext",
+							//labelAlign: "cc",
+							fontColor: "#FFFFFF",
+							fontOpacity: 1,
+							fontFamily: "Arial",
+							fontSize: 24
+							
+						}),
+						"select": new OpenLayers.Style({
+							strokeColor: "#FE9A2E",
+							strokeOpacity: 1,
+							strokeWidth: 1,
+							fillColor: "#FF0000",
+							fillOpacity: 0.5,
+							graphicZIndex: 2,
+							//cursor: "pointer"
+						})
+					}),displayInLayerSwitcher: false,
+					});
+				
+				var strategy = new OpenLayers.Strategy.Cluster({distance: 20, threshold: 2});
+                var layer_winter = new OpenLayers.Layer.Vector("Winter Locations", {
+                    strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1}),strategy],
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: "points_europe_winter.txt",
+                        format: new OpenLayers.Format.Text()
+                    }),
+					styleMap: new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+							pointRadius: 10,
+							fillColor: "#4444FF",
+							fillOpacity: 0.8,
+							strokeColor: "#4444FF",
+							strokeWidth: 1,
+							strokeOpacity: 0.8
+
+							})}
+					)
+                });
+			
+				var strategy2 = new OpenLayers.Strategy.Cluster({distance: 20, threshold: 2});
+                
+                var layer_summer = new OpenLayers.Layer.Vector("Summer Locations", {
+                    strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1}),strategy2],
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: "points_europe_summer.txt",
+                        format: new OpenLayers.Format.Text()
+                    }),
+					styleMap: new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+							pointRadius: 10,
+							fillColor: "#FF4444",
+							fillOpacity: 0.8,
+							strokeColor: "#FF4444",
+							strokeWidth: 1,
+							strokeOpacity: 0.8
+
+							})}
+					)
+                });
+				
+				
+				
+				
+				
+				
+				
+				
+                map.addLayers([day,elev,polygons,layer_winter,layer_summer]);
+                map.zoomToMaxExtent();
+				map.addControl(new OpenLayers.Control.LayerSwitcher());
+				
+                // Interaction; not needed for initial display.
+                selectControl = new OpenLayers.Control.SelectFeature([layer_winter,layer_summer,polygons]);
+                map.addControl(selectControl);
+                selectControl.activate();
+                
+				layer_summer.events.on({
+                    'featureselected': onFeatureSelect,
+                    'featureunselected': onFeatureUnselect,
+					clickout: true,
+                });
+			layer_winter.events.on({
+                    'featureselected': onFeatureSelect,
+                    'featureunselected': onFeatureUnselect,
+					clickout: true,
+                });
+			
+			var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
+					hover: true,
+					//onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+					highlightOnly: true,
+					renderIntent: "temporary",
+				}
+				);
+			
+				map.addControl(highlightCtrl);
+				highlightCtrl.activate();
+			/*	
+			var selectControl2 = new OpenLayers.Control.SelectFeature(polygons, {
+					//hover: true,
+					onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+					//highlightOnly: true,
+					renderIntent: "select",
+				}
+				);
+			
+				map.addControl(selectControl2);
+				selectControl2.activate();
+				*/
+			/*	
+				var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
+					hover: true,// onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+					highlightOnly: true,
+					renderIntent: "temporary",
+				}
+				);
+				*/
+            } // init finished
+             
+			
+			// interaction of points
+			
+            // Needed only for interaction, not for the display.
+            function onPopupClose(evt) {
+                // 'this' is the popup.
+                var feature = this.feature;
+                if (feature.layer) { // The feature is not destroyed
+                    selectControl.unselect(feature);
+                } else { // After "moveend" or "refresh" events on POIs layer all 
+                         //     features have been destroyed by the Strategy.BBOX
+                    this.destroy();
+                }
             }
-			);
+            function onFeatureSelect(evt) {
+                feature = evt.feature;
+				if (feature.cluster) {
+										var cc=	"<h2>"+feature.cluster.length+" Locations here</h2>"
+										 }else {
+                                         var cc="<h2>"+feature.attributes.title + "</h2>" +feature.attributes.description};
+										 
+                popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                                         feature.geometry.getBounds().getCenterLonLat(),
+                                         null,//new OpenLayers.Size(100,100),
+                                         cc,
+                                         null, true, onPopupClose);
+                feature.popup = popup;
+                popup.feature = feature;
+                map.addPopup(popup, true);
+            }
+            function onFeatureUnselect(evt) {
+                feature = evt.feature;
+                if (feature.popup) {
+                    popup.feature = null;
+                    map.removePopup(feature.popup);
+                    feature.popup.destroy();
+                    feature.popup = null;
+                }
+            }
 			
-	selectControl = new OpenLayers.Control.SelectFeature(polygons,
-                {renderIntent:"select", clickout: true});
-
-	map.addControl(highlightCtrl);
-	map.addControl(selectControl);
-	highlightCtrl.activate();
-	
-
-	selectControl.activate();
-
-	
-	layerswitch.maximizeControl();
-	map.zoomToMaxExtent();
-}	
-
+			// end interaction of points
+			
+			
+			
+			
+			
+			
+			
 </script>
 
 </head>
