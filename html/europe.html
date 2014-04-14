@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>World WMS Example</title>
+
 <link rel="stylesheet" href="../../libraries/OpenLayers-2.13.1/theme/default/style.css" type="text/css">
 
 <script src="../../libraries/OpenLayers-2.13.1/OpenLayers.js"></script>
@@ -27,6 +28,9 @@
 
 
 	var map;
+
+	
+	
         		/* A convenient function that add vector layers to the map. */
 	function addVectorLayer(map, name, url, opts) {
 		var layer = new OpenLayers.Layer.Vector(name, opts);
@@ -114,9 +118,21 @@
 							strokeWidth: 1,
 							strokeOpacity: 0.8
 
-							})}
-					)
+							}),
+																					
+							"select": new OpenLayers.Style({
+							pointRadius: 10,
+							fillColor: "#8888FF",
+							fillOpacity: 0.8,
+							strokeColor: "#4444FF",
+							strokeWidth: 1,
+							strokeOpacity: 0.8
+
+							}), 
+							
+					})
                 });
+							
 			
 				var strategy2 = new OpenLayers.Strategy.Cluster({distance: 20, threshold: 2});
                 
@@ -134,7 +150,19 @@
 							strokeWidth: 1,
 							strokeOpacity: 0.8
 
-							})}
+							}),
+							
+							"select": new OpenLayers.Style({
+							pointRadius: 10,
+							fillColor: "#FF8888",
+							fillOpacity: 0.8,
+							strokeColor: "#FF4444",
+							strokeWidth: 1,
+							strokeOpacity: 0.8
+
+							}) 
+							
+							}
 					)
                 });
 				
@@ -214,9 +242,15 @@
             function onFeatureSelect(evt) {
                 feature = evt.feature;
 				if (feature.cluster) {
-										var cc=	"<h2>"+feature.cluster.length+" Locations here</h2>"
+										var cc=	"<h4>"+feature.cluster.length+" Locations here:</h4>"
+										for (var i=0; i<feature.cluster.length;i+=1) {
+											cc+=feature.cluster[i].attributes.title+"<br>";
+										}
+										
+										
 										 }else {
                                          var cc="<h2>"+feature.attributes.title + "</h2>" +feature.attributes.description};
+										 
 										 
                 popup = new OpenLayers.Popup.FramedCloud("featurePopup",
                                          feature.geometry.getBounds().getCenterLonLat(),
@@ -250,6 +284,6 @@
 </head>
 <body onload="init()">
 <div id="map" style="position:absolute;left:0;top:0;right:0;bottom:0"></div>
-         
+
 </body>
 </html>
