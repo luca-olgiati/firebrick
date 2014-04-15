@@ -1,0 +1,207 @@
+<html>
+<head>
+  <title>Cantons</title>
+  <style type="text/css">
+	body {
+	  margin: 0;
+	}
+  </style>
+  <script type="text/javascript" src="https://www.google.com/jsapi"> </script>
+  <script src="../../libraries/jquery-2.1.0.min.js"></script>
+  <script type="text/javascript">
+  
+    var ge;
+    google.load("earth", "1");
+
+    function init() {
+      google.earth.createInstance('map3d', initCB, failureCB);
+    }
+
+    function relativeToAbsolutePath(relativePath) {
+        return document.URL.substr(0, 1 + document.URL.lastIndexOf('/')) + relativePath;
+    }
+
+	
+	
+	
+	function setStartingValues() {
+	// startwerte:  !!! 8-ung: werden momentan überschrieben!!!! 
+	
+	// attractions
+	var options = ({id: "map-Attractions", pressed: true});
+	console.log('startwerte:',options);
+	extractData(options);
+	
+	// food
+	var options = ({id: "map-Food", pressed: true});
+	console.log('startwerte:',options);
+	extractData(options);
+	}
+	
+	
+	//var tag = options.id;
+	//var button = options.pressed;
+	var tag; 
+	var button; 
+	
+	
+	
+	// Get infos via sendMessage (Receiver-Side)
+	$(window).on('message', function(evt) {
+	var options = evt.originalEvent.data;
+	console.log('uebergeben:',options);
+	extractData(options);
+	});
+
+
+	
+	function extractData(options) {
+	// Extract received message
+	tag = options.id;
+	button = options.pressed;
+	console.log('kml-tag:',tag);	
+	// listener wäre nötig!!!! 
+	reload(tag,button); 
+	}
+	
+	
+	//source: http://code.google.com/apis/earth/documentation/samples/kml_example.kml
+    function initCB(instance) {
+	
+	
+		// Start Settings: 
+		ge = instance;
+		ge.getWindow().setVisibility(true);
+		ge.getOptions().setStatusBarVisibility(true);
+		ge.getNavigationControl().setVisibility(ge.VISIBILITY_AUTO); 	// adapted display
+		//ge.getNavigationControl().setVisibility(ge.VISIBILITY_SHOW); 	// permanently shown
+		ge.getNavigationControl().getScreenXY().setXUnits(ge.UNITS_PIXELS);  // set control to top left position
+		ge.getNavigationControl().getScreenXY().setYUnits(ge.UNITS_INSET_PIXELS); // set control to top left position
+		ge.getLayerRoot().enableLayerById(ge.LAYER_BORDERS, true);
+		ge.getLayerRoot().enableLayerById(ge.LAYER_ROADS, true);
+
+		var lookAt = ge.createLookAt('');
+		//lookAt.setLatitude(46.120721);
+		//lookAt.setLongitude(7.937124);
+		//lookAt.setRange(5000);
+		lookAt.set(46.120721, 7.937124, 900, ge.ALTITUDE_RELATIVE_TO_GROUND, 170, 65, 5000);
+		// explanation: (Latitude, Longitude, Hight, Definition, Rotation, Tilt, Range of the camera to the object)
+		// Set the FlyTo speed
+		ge.getOptions().setFlyToSpeed(0.4); // glaube zwischen 0 und 1
+		ge.getView().setAbstractView(lookAt);
+		
+		// Displays the current scale of the map (Massstab)
+		ge.getOptions().setScaleLegendVisibility(true);
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		// load KML files
+		
+		// toilets
+		var link3 = ge.createLink('');
+		var href3 = relativeToAbsolutePath('kml/toilets.kml');
+		link3.setHref(href3);
+		var networkLink3 = ge.createNetworkLink('');
+		networkLink3.set(link3, true, false); // Sets the link, refreshVisibility, and flyToView
+		//ge.getFeatures().appendChild(networkLink3);	  
+		
+		
+		// call function
+		setStartingValues();
+	
+    }
+	
+	
+	function reload(tag, button) {
+			// listener wäre nötig!!!! 
+		
+		// umwandeln der tags in kmlUrl-strings
+		console.log('start of reload', tag, button);
+		switch (tag) {
+			case 'map-Attractions':
+			console.log('in switch');
+			if (button == true) {
+				loadKml('kml/skilifts.kml'); 
+			}
+			else {
+				removeKml('kml/skilifts.kml');
+			}
+			break;
+			
+			case 'map-Food':
+			if (button == true) {
+				loadKml('kml/restaurants.kml'); 
+				loadKml('kml/toilets.kml');
+			}
+			else {
+				removeKml('kml/restaurants.kml');
+				removeKml('kml/toilets.kml');
+			}
+			break;
+		
+		
+		
+		}
+	
+	
+	}
+	
+	// function to load a kml depending on its URL
+	function loadKml(kmlUrl) {
+	
+		var href = relativeToAbsolutePath(kmlUrl);
+
+		google.earth.fetchKml(ge, href, function(kmlObject) {
+		
+		if (kmlObject) {
+			ge.getFeatures().appendChild(kmlObject);
+			setSkilifts(kmlObject, kmlUrl);
+		}});
+	}
+	
+	var kmls = {};
+	
+	function setSkilifts(kmlObject, kmlUrl) {		
+		kmls[kmlUrl] = kmlObject;
+	}
+	
+	
+	
+	function removeKml(kmlName) {
+	
+	var skilifts = kmls[kmlName];
+		
+		ge.getFeatures().removeChild(skilifts);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+    function failureCB(errorCode) {
+    }
+
+    google.setOnLoadCallback(init);
+  </script>
+
+</head>
+<body>
+  <div id="map3d" style="height: 100%; width: 100%"></div>
+  <!-- <button type="button" onclick="alert('Hello world!')">Click Me!</button> -->
+  <!-- <button type="button" onclick="loadKml('kml/skilifts.kml')">Show Skilifts!</button>
+  <button type="button" onclick="loadKml('kml/restaurants.kml')">Show restaurants!</button> -->
+
+</body>
+</html>
