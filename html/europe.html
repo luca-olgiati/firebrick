@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>World WMS Example</title>
+<title>Europe map</title>
 
 <link rel="stylesheet" href="../../libraries/OpenLayers-2.13.1/theme/default/style.css" type="text/css">
 
@@ -37,7 +37,7 @@ function init(){
 						strokeWidth: 1,
 						fillColor: "#FE9A2E",
 						fillOpacity: 0.5,
-						//cursor: "pointer",			
+						cursor: "pointer",			
 					}),
 			"temporary": new OpenLayers.Style({
 						strokeColor: "#FE9A2E",
@@ -73,7 +73,8 @@ function init(){
 				fillOpacity: 0.8,
 				strokeColor: "#4444FF",
 				strokeWidth: 1,
-				strokeOpacity: 0.8
+				strokeOpacity: 0.8,
+				cursor: "pointer",
 				}),														
 				"select": new OpenLayers.Style({
 				pointRadius: 10,
@@ -128,8 +129,9 @@ function init(){
 		div: 'map',
 		maxResolution: "auto",
 		numZoomLevels: 4,
-		maxExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
-		restrictedExtent: new OpenLayers.Bounds(-25.67, 21.5, 51.55, 71.05),
+		maxExtent: new OpenLayers.Bounds(-25.67, 27.5, 51.55, 71.05),
+		restrictedExtent: new OpenLayers.Bounds(-25.67, 27.5, 51.55, 71.05),
+		controls: []
 	
 	};
 	map = new OpenLayers.Map(options);
@@ -148,63 +150,85 @@ function init(){
 		
 	// section 1.5: load points with cluster strategies
 	// winter
-	var strategy = new OpenLayers.Strategy.Cluster({distance: 20, threshold: 2});
+	var strategy = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
 	var layer_winter = new OpenLayers.Layer.Vector("Winter Locations", {
-		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1}),strategy],
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy], // resfactor: defines how often new clustering is done dependent on resolution (1: for every zoom change)
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_winter.txt",
 			format: new OpenLayers.Format.Text()
 		}),
 		styleMap: style_winter
 	});
+	layer_winter.setVisibility(false);
+	
 	// summer
-	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 20, threshold: 2});
+	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
 	var layer_summer = new OpenLayers.Layer.Vector("Summer Locations", {
-		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1}),strategy2],
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy2],
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_summer.txt",
 			format: new OpenLayers.Format.Text(),
 		}),
 		styleMap: style_summer
 	});
+	layer_summer.setVisibility(false);
 	
 	// cultural
-	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
 	var layer_cultural = new OpenLayers.Layer.Vector("Cultural Locations", {
-		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1.1}),strategy2],
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_cultural.txt",
 			format: new OpenLayers.Format.Text(),
 		}),
 		styleMap: style_cultural
 	});
+	layer_cultural.setVisibility(false);
+	// trial for clustering of different origins
+	
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var layer_2w = new OpenLayers.Layer.Vector("2l", {
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "points_europe_sumwin.txt",
+			format: new OpenLayers.Format.Text(),
+		}),
+		styleMap: style_cultural
+	});
+	
 	
 	
 	map.addLayers([layer_winter,layer_summer,layer_cultural]);
-	
+	map.addLayer(layer_2w);
 	
 	
 	//1.5.2 some more commands
 	map.zoomToMaxExtent();
 	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.PanZoomBar);
+	map.addControl(new OpenLayers.Control.Navigation);
 	
 	
 	// section 1.6: Interactions definition
-	/*
 	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
 		hover: true,
 		highlightOnly: true,
 		renderIntent: "temporary",
 	}
 	);
-
+	
 	map.addControl(highlightCtrl);
 	highlightCtrl.activate();
 
-	*/
-	selectControl = new OpenLayers.Control.SelectFeature([layer_winter,layer_summer,layer_cultural,polygons]);
+	selectControl = new OpenLayers.Control.SelectFeature([layer_2w,layer_winter,layer_summer,layer_cultural,polygons]);//,{box:true});
 	map.addControl(selectControl);
 	selectControl.activate();
+	
+	layer_2w.events.on({
+		'featureselected': onFeatureSelect,
+		'featureunselected': onFeatureUnselect,
+		clickout: true,
+	});
 	
 	layer_summer.events.on({
 		'featureselected': onFeatureSelect,
@@ -278,23 +302,30 @@ function onFeatureSelect(evt) {
 	if (feature.cluster) {
 							var cc=	"<h4>"+feature.cluster.length+" Locations here:</h4>"
 							for (var i=0; i<feature.cluster.length;i+=1) {
-								cc+=feature.cluster[i].attributes.title+"<br>";
+								cc+="-"+feature.cluster[i].attributes.title+"<br>";
 							}
 							
 							
 							 }else {
-							 var cc="<h2>"+feature.attributes.title + "</h2>" +feature.attributes.description};
-							 window.testvar=cc;
 							 
+							 var cc="<h4>"+feature.attributes.title+"</h4>"+feature.attributes.description
 							 
-	popup = new OpenLayers.Popup.FramedCloud("featurePopup",
-							 feature.geometry.getBounds().getCenterLonLat(),
-							 null,//new OpenLayers.Size(100,100),
-							 cc,
-							 null, true, onPopupClose);
+							 };
+							 
+			 popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+					 feature.geometry.getBounds().getCenterLonLat(),
+					 null,
+					 cc,
+					 null,
+					 true);
+	popup.autoSize = true;
+    popup.maxSize = new OpenLayers.Size(400,400);	
+
+	
 	feature.popup = popup;
 	popup.feature = feature;
 	map.addPopup(popup, true);
+	
 }
 function onFeatureUnselect(evt) {
 	feature = evt.feature;
