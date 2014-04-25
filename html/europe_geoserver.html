@@ -1,0 +1,412 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Europe map</title>
+
+<link rel="stylesheet" href="../../libraries/OpenLayers-2.13.1/theme/default/style.css" type="text/css">
+
+<script src="../../libraries/OpenLayers-2.13.1/OpenLayers.js"></script>
+
+<!-- script src="http://openlayers.org/api/OpenLayers.js"></script -->
+
+<!-- script src="../../libraries/OpenLayers/OpenLayers.debug.js"></script -->
+<script src="../../libraries/proj4js/proj4js-combined.js"></script>
+<script src="../../libraries/proj4js/defs/EPSG21781.js"></script>
+<script src="../../libraries/proj4js/util/MGRS.js"></script>
+<script src="../../libraries/jquery-2.1.0.min.js"></script>
+<script src="../../scripts/RandomEtc-shapefile-js/lib/binaryajax.js"></script>
+<script src="../../scripts/RandomEtc-shapefile-js/src/binarywrapper.js"></script>
+<script src="../../scripts/RandomEtc-shapefile-js/src/shapefile.js"></script>
+<script src="../../scripts/RandomEtc-shapefile-js/src/dbf.js"></script>
+<script src="../../scripts/RandomEtc-shapefile-js/src/ol_shapefile.js"></script>
+
+<script type="text/javascript">
+
+// SECTION 1: INIT
+function init(){
+
+	//section 1.1: definition of styles
+	// definition of styles for polygons
+	style_pol = new OpenLayers.StyleMap({
+			"default": new OpenLayers.Style({
+						strokeColor: "#FE9A2E",
+						strokeOpacity: 1,
+						strokeWidth: 1,
+						fillColor: "#FE9A2E",
+						fillOpacity: 0.5,
+						cursor: "pointer",			
+					}),
+			"temporary": new OpenLayers.Style({
+						strokeColor: "#FE9A2E",
+						strokeOpacity: 1,
+						strokeWidth: 1,
+						fillColor: "#00FF00",
+						fillOpacity: 1,
+						//cursor: "pointer",
+						//label: "${Full_name}", //perhaps: http://gis.stackexchange.com/questions/29584/openlayers-attribute-substitution-failing-on-kml-file
+						//label: "Testtext",
+						//labelAlign: "cc",
+						fontColor: "#FFFFFF",
+						fontOpacity: 1,
+						fontFamily: "Arial",
+						fontSize: 24
+						
+					}),
+			"select": new OpenLayers.Style({
+						strokeColor: "#FE9A2E",
+						strokeOpacity: 1,
+						strokeWidth: 1,
+						fillColor: "#FF0000",
+						fillOpacity: 0.8,
+						graphicZIndex: 2,
+						//cursor: "pointer"
+						})
+		});
+		// definition of styles for cluster points
+		// winter
+		style_winter= new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#4444FF",
+				fillOpacity: 0.8,
+				strokeColor: "#4444FF",
+				strokeWidth: 1,
+				strokeOpacity: 0.8,
+				cursor: "pointer",
+				}),														
+				"select": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#8888FF",
+				fillOpacity: 0.8,
+				strokeColor: "#4444FF",
+				strokeWidth: 1,
+				strokeOpacity: 0.8
+				}), 
+		});
+		// summer
+		style_summer=new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#FF4444",
+				fillOpacity: 0.8,
+				strokeColor: "#FF4444",
+				strokeWidth: 1,
+				strokeOpacity: 0.8
+				}),
+				"select": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#FF8888",
+				fillOpacity: 0.8,
+				strokeColor: "#FF4444",
+				strokeWidth: 1,
+				strokeOpacity: 0.8
+				}) 
+				});
+		// cultural
+		style_cultural=new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#999999",
+				fillOpacity: 0.8,
+				strokeColor: "#FF4444",
+				strokeWidth: 1,
+				strokeOpacity: 0.8
+				}),
+				"select": new OpenLayers.Style({
+				pointRadius: 10,
+				fillColor: "#999999",
+				fillOpacity: 0.8,
+				strokeColor: "#FF4444",
+				strokeWidth: 1,
+				strokeOpacity: 0.8
+				}) 
+				});
+		
+	// section 1.2: general properties for the map	
+	OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5; 
+	OpenLayers.Util.onImageLoadErrorColor = "transparent";
+	
+				var bounds = new OpenLayers.Bounds(
+                    -24.5308435000275, 27.5,
+                    40.2281989997841, 71.05
+                );
+	
+	var options = {
+		div: 'map',
+		maxResolution: "auto",
+		numZoomLevels: 4,
+		//maxExtent: new OpenLayers.Bounds(-25.67, 27.5, 51.55, 71.05),
+		maxExtent: bounds,
+		//restrictedExtent: new OpenLayers.Bounds(-25.67, 27.5, 51.55, 71.05),
+		controls: []
+	};
+	
+				format = 'image/png';
+                
+	
+	map = new OpenLayers.Map(options);
+	
+				tiled = new OpenLayers.Layer.WMS(
+                    "europe_1", "http://localhost:9998/geoserver/ows",
+                    {
+                        STYLES: '',
+                        LAYERS: 'mmkarto:europe_1',
+                        format: format,
+						transparent: "true",
+					},
+                    {
+                        buffer: 0,
+                        displayOutsideMaxExtent: true,
+                        isBaseLayer: false,
+                        yx : {'EPSG:4258' : true}
+                    } 
+                );
+                    
+                				
+				
+				 select = new OpenLayers.Layer.Vector("Selection", {styleMap: 
+                new OpenLayers.Style(OpenLayers.Feature.Vector.style["select"])
+				});
+				hover = new OpenLayers.Layer.Vector("Hover");
+				map.addLayers([tiled, hover, select]);
+				
+				control = new OpenLayers.Control.GetFeature({
+					protocol: OpenLayers.Protocol.WFS.fromWMSLayer(tiled),
+					box: true,
+					hover: true,
+					multipleKey: "shiftKey",
+					toggleKey: "ctrlKey"
+				});
+				control.events.register("featureselected", this, function(e) {
+					select.addFeatures([e.feature]);
+				});
+				control.events.register("featureunselected", this, function(e) {
+					select.removeFeatures([e.feature]);
+				});
+				control.events.register("hoverfeature", this, function(e) {
+					hover.addFeatures([e.feature]);
+				});
+				control.events.register("outfeature", this, function(e) {
+					hover.removeFeatures([e.feature]);
+				});
+				map.addControl(control);
+				control.activate();
+				
+				
+				
+				
+				
+	
+	// section 1.3: load and add baselayers day and elevation
+	var administr= new OpenLayers.Layer.WMS("administrative", "https://qgiscloud.com/lolgiati/europe_scaledependence2/wms?", {layers: 'europe_scaledependence2', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	
+	var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	map.addLayers([administr,day,elev]);
+	
+	// section 1.4: load and add polygons from shapefile
+	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', { 
+		styleMap: style_pol,
+		//displayInLayerSwitcher: false,	
+	});
+	map.addLayers([polygons]);
+		
+	// section 1.5: load points with cluster strategies
+	// winter
+	var strategy = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var layer_winter = new OpenLayers.Layer.Vector("Winter Locations", {
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy], // resfactor: defines how often new clustering is done dependent on resolution (1: for every zoom change)
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "points_europe_winter.txt",
+			format: new OpenLayers.Format.Text()
+		}),
+		styleMap: style_winter
+	});
+	layer_winter.setVisibility(false);
+	
+	// summer
+	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var layer_summer = new OpenLayers.Layer.Vector("Summer Locations", {
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy2],
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "points_europe_summer.txt",
+			format: new OpenLayers.Format.Text(),
+		}),
+		styleMap: style_summer
+	});
+	layer_summer.setVisibility(false);
+	
+	// cultural
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var layer_cultural = new OpenLayers.Layer.Vector("Cultural Locations", {
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "points_europe_cultural.txt",
+			format: new OpenLayers.Format.Text(),
+		}),
+		styleMap: style_cultural
+	});
+	layer_cultural.setVisibility(false);
+	// trial for clustering of different origins
+	
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var layer_2w = new OpenLayers.Layer.Vector("locations_all", {
+		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "points_europe_sumwin.txt",
+			format: new OpenLayers.Format.Text(),
+		}),
+		styleMap: style_cultural
+	});
+	
+	
+	
+	map.addLayers([layer_winter,layer_summer,layer_cultural]);
+	map.addLayer(layer_2w);
+	
+	
+	//1.5.2 some more commands
+	map.zoomToMaxExtent();
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.PanZoomBar);
+	map.addControl(new OpenLayers.Control.Navigation);
+	
+
+	// section 1.6: Interactions definition
+	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
+		hover: true,
+		highlightOnly: true,
+		renderIntent: "temporary",
+	}
+	);
+	
+	map.addControl(highlightCtrl);
+	highlightCtrl.activate();
+
+	selectControl = new OpenLayers.Control.SelectFeature([layer_2w,layer_winter,layer_summer,layer_cultural,polygons]);//,{box:true});
+	map.addControl(selectControl);
+	selectControl.activate();
+	
+	layer_2w.events.on({
+		'featureselected': onFeatureSelect,
+		'featureunselected': onFeatureUnselect,
+		clickout: true,
+	});
+	
+	layer_summer.events.on({
+		'featureselected': onFeatureSelect,
+		'featureunselected': onFeatureUnselect,
+		clickout: true,
+	});
+	layer_winter.events.on({
+		'featureselected': onFeatureSelect,
+		'featureunselected': onFeatureUnselect,
+		clickout: true,
+	});
+	layer_cultural.events.on({
+			'featureselected': onFeatureSelect,
+			'featureunselected': onFeatureUnselect,
+			clickout: true,
+		});
+
+
+	/*	
+	var selectControl2 = new OpenLayers.Control.SelectFeature(polygons, {
+		//hover: true,
+		onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+		//highlightOnly: true,
+		renderIntent: "select",
+	}
+	);
+
+	map.addControl(selectControl2);
+	selectControl2.activate();
+	
+	
+	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
+		hover: true,// onSelect: onFeatureSelect, onUnselect: onFeatureUnselect,
+		highlightOnly: true,
+		renderIntent: "temporary",
+	}
+	);
+	*/
+} // init finished
+		 
+// section 2: functions
+
+ /* A convenient function that add vector layers to the map. */
+function addVectorLayer(map, name, url, opts) {
+	var layer = new OpenLayers.Layer.Vector(name, opts);
+	getOpenLayersFeatures(url, function(vectors) {	
+		layer.addFeatures(vectors);
+	});
+	//map.addLayer(layer);
+	return layer;
+}
+ 
+ 
+ 
+
+// interaction of points
+
+// Needed only for interaction, not for the display.
+function onPopupClose(evt) {
+	// 'this' is the popup.
+	var feature = this.feature;
+	if (feature.layer) { // The feature is not destroyed
+		selectControl.unselect(feature);
+	} else { // After "moveend" or "refresh" events on POIs layer all 
+			 //     features have been destroyed by the Strategy.BBOX
+		this.destroy();
+	}
+}
+function onFeatureSelect(evt) {
+	feature = evt.feature;
+	if (feature.cluster) {
+							var cc=	"<h4>"+feature.cluster.length+" Locations here:</h4>"
+							for (var i=0; i<feature.cluster.length;i+=1) {
+								cc+="-"+feature.cluster[i].attributes.title+"<br>";
+							}
+							
+							
+							 }else {
+							 
+							 var cc="<h4>"+feature.attributes.title+"</h4>"+feature.attributes.description
+							 
+							 };
+							 
+			 popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+					 feature.geometry.getBounds().getCenterLonLat(),
+					 null,
+					 cc,
+					 null,
+					 true);
+	popup.autoSize = true;
+    popup.maxSize = new OpenLayers.Size(400,400);	
+
+	
+	feature.popup = popup;
+	popup.feature = feature;
+	map.addPopup(popup, true);
+	
+}
+function onFeatureUnselect(evt) {
+	feature = evt.feature;
+	if (feature.popup) {
+		popup.feature = null;
+		map.removePopup(feature.popup);
+		feature.popup.destroy();
+		feature.popup = null;
+	}
+}
+
+// end interaction of points
+		
+</script>
+
+</head>
+<body onload="init()">
+<div id="map" style="position:absolute;left:0;top:0;right:0;bottom:0"></div>
+
+</body>
+</html>
