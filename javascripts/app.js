@@ -58,6 +58,17 @@ Ext.application({
 					loadMap();
 				}
 				break;
+				case 'buttonClick': 
+				
+				
+				//alert('clicked');
+				
+				var win = iframe.contentWindow;
+				win.postMessage({ id: msg.id, pressed: msg.pressed }, '*');
+				
+				
+				
+				break;
 			}
 		}
 
@@ -143,12 +154,49 @@ Ext.application({
 			mmkarto2012: { src: '../Maps/maps/mmkarto2012/exercise9/index.svg' },
 			wms_ch: { src: '../Maps/maps/wms/ch_wms.html' },
 			wms_world: { src: '../Maps/maps/wms/world_wms.html' },
+			wms_greece: { src: '../Maps/maps/Corfu/greece_wms.html' },
 			ge_activity_rate: { src: '../Maps/maps/google-earth/Erwerb.html' },
 			ge_cantons: { src: '../Maps/maps/google-earth/Kantone.html' },
 			ge_gas_network: { src: '../Maps/maps/google-earth/Gasnetz.html' },
 			airports: { src: '../Maps/maps/d3/USFlights.html' },
-			europe_map: { src: '../Maps/maps/europe/europe.html' }
+			culture_map: { src: '../Maps/maps/Bern/Bern_mapquest.html' },
+			saas_fee: { src: '../Maps/maps/saastal/SaasFee_V3.html' },
+			europe_map: { src: '../Maps/maps/europe/europe.html' },
+			europe_map_bm: { src: '../Maps/maps/europe/europe_bm.html' },
+			europe_map_pl: { src: '../Maps/maps/europe/europe_pl.html' },
+			europe_map_wsd: { src: '../Maps/maps/europe/europe_wsd.html' },
 		}
+		
+		
+		// to determine window width   
+		// source: http://de.selfhtml.org/javascript/beispiele/fensterueberwachen.htm
+		function Fensterweite () {
+			if (window.innerWidth) {
+				return window.innerWidth;
+			} else if (document.body && document.body.offsetWidth) {
+				return document.body.offsetWidth;
+			} else {
+				return 0;
+			}
+		}
+		
+		function neuAufbau () {
+			if (Weite != Fensterweite() )
+				location.href = location.href;
+		}
+		
+		
+		/* Überwachung von Netscape initialisieren */
+		if (!window.Weite && window.innerWidth) {
+			window.onresize = neuAufbau;
+			Weite = Fensterweite();
+		}
+		
+		
+		// end of window width part
+		
+		
+		
 
 		// The viewport is the container for all interface elements.
 		Ext.create('Ext.container.Viewport', {
@@ -164,178 +212,199 @@ Ext.application({
 				items: [{ xtype: 'tbfill' },
 						{
 					// First menu is about this atlas project.
-					id: 'europe-map',
+					id: 'Europe',
 					text: 'Europe Maps',
 					xtype: 'splitbutton',
-					width: 200,
+					width: (400+window.innerWidth*0.10)/4,
 					// Menu entries follow here.
 					menu: new Ext.menu.Menu({
 						items: [
-							// Imprint is the first menu entry.
-							{
-								text: 'Price Level Map',
-								width: 200,
-								// This function is called when the menu item is selected.
-								listeners: {
+									// Imprint is the first menu entry.
+									{
+									text: 'Price Level Map',
+									// width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
-									sendMessage({method: 'loadMap', id: 'europe_map'});
+									sendMessage({method: 'loadMap', id: 'europe_map_pl'});
+									var e = document.getElementById('panel_down');
+									e.style.display='none';}
 									}
-								}
-							},
-							{
-								text: 'Big-Mac Index Map',
-								width: 200,
-								// This function is called when the menu item is selected.
-								listeners: {
+									},
+									{
+									text: 'Big-Mac Index Map',
+									// width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
-									sendMessage({method: 'loadMap', id: 'europe_map'});
+									sendMessage({method: 'loadMap', id: 'europe_map_bm'});
+									var e = document.getElementById('panel_down');
+									e.style.display='none';}
 									}
-								}
-							},
-							{
-								text: 'Temperature Map',
-								width: 200,
-								// This function is called when the menu item is selected.
-								listeners: {
+									},
+									{
+									text: 'Winter/Summer Destinations',
+									// width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
-									sendMessage({method: 'loadMap', id: 'europe_map'});
+									sendMessage({method: 'loadMap', id: 'europe_map_wsd'});
+									var e = document.getElementById('panel_down');
+									e.style.display='none';
+									document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
 									}
-								}
-							}
-						]	
+									}
+									}
+								]	
 					}),
 					// Listeners handle toolbar interactions.
 					listeners: {
-							// A click on a tree menu item start the loading of a map.
-							click: function(view, rec, item, index, eventObj) {
-								sendMessage({method: 'loadMap', id: 'europe_map'});
+						// A click on a tree menu item start the loading of a map.
+						click: function(view, rec, item, index, eventObj) {
+						sendMessage({method: 'loadMap', id: 'europe_map'});
+						var e = document.getElementById('panel_down');
+									e.style.display='none';
+						document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
+												
+						}
+					},
+				},
+				// drop down menu for cultural maps
+				{	
+					id: 'aboutCulture',
+					text: 'Cultural Maps',
+					xtype: 'splitbutton',
+					width: (400+window.innerWidth*0.10)/4,
+					// Menu entries follow here.
+					menu: new Ext.menu.Menu({
+						items: [
+									// Imprint is the first menu entry.
+									{
+									text: 'Bern Map',
+									width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'culture_map'});
+									var e = document.getElementById('panel_down');
+									e.style.display='block';}
 									}
+									}
+								]	
+					}),
+					// Listeners handle toolbar interactions.
+					listeners: {
+						// A click on a tree menu item start the loading of a map.
+						click: function(view, rec, item, index, eventObj) {
+						sendMessage({method: 'loadMap', id: 'culture_map'});
+						var e = document.getElementById('panel_down');
+									e.style.display='block';}
 					},
 				},
+
+				// drop down menu for winter maps
 				{
-					// Next menu is a map menu
-					id: 'Culture Map',
-					text: 'Bern Map',
-					width: 200,
-					/*xtype: 'splitbutton',
+					id: 'aboutWinter',
+					text: 'Winter Maps',
+					xtype: 'splitbutton',
+					width: (400+window.innerWidth*0.10)/4,
+					// Menu entries follow here.
 					menu: new Ext.menu.Menu({
 						items: [
-							{
-								text: 'Open Map in New Window...',
-								handler: function() {
-									// We present the current map in a new browser window.
-									var url = Ext.get('map').dom.src;
-									window.open(url, url, 'scrollbars=yes,location=no', false);
-								}
-							},
-							{
-								text: 'Show Map URL',
-								handler: function() {
-									// We show the URL of the current map.
-									var url = Ext.get('map').dom.src;
-									alert('URL: ' + url);
-								}
-							}
-				        ]
-				    }),*/
+									// Imprint is the first menu entry.
+									{
+									text: 'Saas-Fee Map',
+									width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'saas_fee'});
+									var e = document.getElementById('panel_down');
+									e.style.display='block';}
+									}
+									}
+								]	
+					}),
+					// Listeners handle toolbar interactions.
 					listeners: {
-						// We present extra information about the current map.
+						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
-							// If the map file name is 'map.html', an info file 'map_info.html' is expected in the same directory.
-							var mapName = content[currentMapId].src;
-							var infoName = mapName.substr(0, mapName.lastIndexOf('.')) + '_info.html';
-							createChildWindow('map', 'About this Map', infoName);
-						}
+						sendMessage({method: 'loadMap', id: 'saas_fee'});
+						var e = document.getElementById('panel_down');
+									e.style.display='block';}
 					},
 				},
+
+				// drop down menu for summer maps
 				{
-					// Next menu is a map menu
-					id: 'Winter Map',
-					text: 'Saas-Fee Map',
-					width: 200,					
-					/*xtype: 'splitbutton',
+					id: 'aboutSummer',
+					text: 'Summer Maps',
+					xtype: 'splitbutton',
+					width: (400+window.innerWidth*0.10)/4,
+					// Menu entries follow here.
 					menu: new Ext.menu.Menu({
 						items: [
-							{
-								text: 'Open Map in New Window...',
-								handler: function() {
-									// We present the current map in a new browser window.
-									var url = Ext.get('map').dom.src;
-									window.open(url, url, 'scrollbars=yes,location=no', false);
-								}
-							},
-							{
-								text: 'Show Map URL',
-								handler: function() {
-									// We show the URL of the current map.
-									var url = Ext.get('map').dom.src;
-									alert('URL: ' + url);
-								}
-							}
-				        ]
-				    }),*/
+									// Imprint is the first menu entry.
+									{
+									text: 'Corfu Map',
+									width: (400+window.innerWidth*0.10)/4,
+									// This function is called when the menu item is selected.
+									listeners: {
+									// A click on a tree menu item start the loading of a map.
+									click: function(view, rec, item, index, eventObj) {
+									sendMessage({method: 'loadMap', id: 'wms_greece'});
+									var e = document.getElementById('panel_down');
+									e.style.display='block';}
+									}
+									}
+								]	
+					}),
+					// Listeners handle toolbar interactions.
 					listeners: {
-						// We present extra information about the current map.
+						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
-							// If the map file name is 'map.html', an info file 'map_info.html' is expected in the same directory.
-							var mapName = content[currentMapId].src;
-							var infoName = mapName.substr(0, mapName.lastIndexOf('.')) + '_info.html';
-							createChildWindow('map', 'About this Map', infoName);
-						}
+						sendMessage({method: 'loadMap', id: 'wms_greece'});
+						var e = document.getElementById('panel_down');
+									e.style.display='block';}
 					},
-				}, 
+				},
+				
+				/**
 				{
 					// Next menu is a map menu
 					id: 'Summer Map',
 					text: 'Corfu Map',
-					width: 200,					
-					/*xtype: 'splitbutton',
-					menu: new Ext.menu.Menu({
-						items: [
-							{
-								text: 'Open Map in New Window...',
-								handler: function() {
-									// We present the current map in a new browser window.
-									var url = Ext.get('map').dom.src;
-									window.open(url, url, 'scrollbars=yes,location=no', false);
-								}
-							},
-							{
-								text: 'Show Map URL',
-								handler: function() {
-									// We show the URL of the current map.
-									var url = Ext.get('map').dom.src;
-									alert('URL: ' + url);
-								}
-							}
-				        ]
-				    }),*/
+					width: (window.innerWidth*0.40)/4,					
 					listeners: {
-						// We present extra information about the current map.
+						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
-							// If the map file name is 'map.html', an info file 'map_info.html' is expected in the same directory.
-							var mapName = content[currentMapId].src;
-							var infoName = mapName.substr(0, mapName.lastIndexOf('.')) + '_info.html';
-							createChildWindow('map', 'About this Map', infoName);
+						sendMessage({method: 'loadMap', id: 'wms_greece'});
 						}
-					},
-				},],
+					}
+				}*/
+				],
 			}, {
 				// The right panel presents the atlas contents with tabs.
 				region: 'east',
+				id: 'panel_right',
 				title: 'Atlas Contents',
 				collapsible: true,
 				resizable: true,
 				resizeHandles: 'w',
 				activeTab: 0,
+				
 				items: [{
 				width: 300,
-				minHeight: 350,
+				//minHeight: 350,
+				height: 350,
 				xtype: 'tabpanel',
-				items: [{
+				items: [
+						/**{
 					// The first tab presents a geographic atlas content as a tree.
 					title: 'Geographical Info',
 					xtype: 'treepanel',
@@ -359,9 +428,16 @@ Ext.application({
 								id: 'wms_world',
 								text: 'WMS Example', leaf: true
 							}, {
+								id: 'wms_greece',
+								text: 'WMS Greece', leaf: true
+							},{
 								id: 'map_quest',
 								text: 'MapQuest Open', leaf: true
-							}, /* {
+							}, {
+								id: 'saas_fee',
+								text: 'Saas Fee Google Earth Map', leaf: true
+							},
+							/** {
 								text: 'Europe', expanded: true, children: [{
 									text: 'Switzerland', expanded: true, children: [{
 										id: 'osm_restricted',
@@ -396,14 +472,15 @@ Ext.application({
 									id: 'ge_gas_network',
 									text: "Gas Network", leaf: true
 								}]
-							} *//**, {
+							} */ 
+							/**, {
 								text: 'North America', expanded: true, children: [{
 									text: 'USA', expanded: true, children: [{
 										id: 'airports',
 										text: 'Aiports and Flights', leaf: true
 									}]
 								}]
-							}*/]
+							}*/ /**]
 						}]
 				    },
 					listeners: {
@@ -411,12 +488,19 @@ Ext.application({
 						itemclick: function(view, rec, item, index, eventObj) {
 							currentMapId = rec.get('id');
 							sendMessage({method: 'loadMap', id: rec.get('id')});
+							
+							
+							//sendMessage({method: 'buttonClick', id: 'map-Attractions', pressed: true});
+							//console.log('erledigt2');
 						}
 					},
 
-				}, /* {
+				}, */
+				 /*{
 					// The second tab presents an alphabetic atlas content.
 					title: 'Alphabetic',
+					//id: 'tab1',
+					//tabIndex: 2,
 					xtype: 'treepanel',
 					layout: 'fit',
 					rootVisible: false,
@@ -442,11 +526,46 @@ Ext.application({
 							sendMessage({method: 'loadMap', id: rec.get('id')});
 						}
 					},
-				}, */{
+				}*/
+				, 
+				
+				/*
+					{
 					// The third tab presents a thematic atlas content.
+					title: 'Cultural Info',
+					//id: 'tab2',
+					//tabIndex: 2,
+					xtype: 'fieldcontainer',
+					
+					
+					//fieldLabel: 'Toppings',
+					
+					defaultType: 'checkboxfield',
+					items: [{
+						boxLabel: 'Anchovies',
+						name: 'topping',
+						inputValue: '1',
+						id: 'checkbox1'
+					}, {
+						boxLabel: 'Artichoke Hearts',
+						name: 'topping',
+						inputValue: '2',
+						checked: true,
+						id: 'checkbox2'
+					}, {
+						boxLabel: 'Bacon',
+						name: 'topping',
+						inputValue: '3',
+						id: 'checkbox3'
+					}]
+					
+					
+					
+					/*
 					title: 'Cultural Info',
 					xtype: 'treepanel',
 					layout: 'fit',
+					 
 					rootVisible: false,
 					root: {
 						expanded: true,
@@ -498,20 +617,343 @@ Ext.application({
 							text: 'Sports Centers',
 						}
 
-						]
-					},
+						] 
+					}*/
+					/*
+					,
 					listeners: {
 						itemclick: function(view, rec, item, index, eventObj) {
 							currentMapId = rec.get('id');
 							sendMessage({method: 'loadMap', id: rec.get('id')});
 						}
 					},
-				}]	
+				},*/
+				/*
+				{	//charis: cultural map
+					title: 'Cultural Info',
+					xtype: 'checkboxgroup',
+					fieldLabel: 'Cultural',
+					columns: 1,
+					defaultType: 'checkboxfield',
+					items: [
+						{xtype: 'component', html: 'Additional Information', cls:'x-form-check-group-label'},
+						{
+						boxLabel: 'Arts',
+						name: 'cb-cultural-1',
+						inputValue: '1',
+						id: 'checkboxB1',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Arts', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Arts', pressed: this.checked});
+							}
+						},
+					},  {
+						boxLabel: 'Places of Worship',
+						name: 'cb-cultural-2',
+						inputValue: '2',
+						id: 'checkboxB2',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Worship', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Worship', pressed: this.checked});
+							}
+						},
+					},	{
+						boxLabel: 'Historic Points',
+						name: 'cb-cultural-3',
+						inputValue: '3',
+						id: 'checkboxB3',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Historic', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Historic', pressed: this.checked});
+							}
+						},
+					},  {
+						boxLabel: 'Sports',
+						name: 'cb-cultural-4',
+						inputValue: '4',
+						checked: true,
+						id: 'checkboxB4',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Sports', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Sports', pressed: this.checked});
+							}
+						},
+					},
+				]	
+				//					
+				*/
+				{
+					// The third tab presents a thematic atlas content.
+					title: 'Winter Info',
+					//id: 'tab3',
+					//tabIndex: 2,
+					xtype: 'checkboxgroup',
+					fieldLabel: 'Winter',
+					//cls: 'x-check-group-alt',  // macht nur e hintergrundfarb... 
+					columns: 1,
 					
+					
+					defaultType: 'checkboxfield',  // gilt als xtype für sämtliche untenstehende items
+					items: [
+						{xtype: 'component', html: 'Daily needs', cls:'x-form-check-group-label'},
+						{
+						boxLabel: 'Shops',
+						name: 'cb-winter-1',
+						inputValue: '1',
+						id: 'checkbox1'
+					}, {
+						boxLabel: 'bank&atm',
+						name: 'cb-winter-2',
+						inputValue: '2',
+						checked: true,
+						id: 'checkbox2'
+					},  {
+						boxLabel: 'pharmacy',
+						name: 'cb-winter-3',
+						inputValue: '3',
+						checked: true,
+						id: 'checkbox3',
+						
+					},
+					
+					{xtype: 'component', html: 'Nature', cls:'x-form-check-group-label', margin: '0 0 0 -50'},
+					{
+						boxLabel: 'glaciers',
+						name: 'cb-winter-4',
+						inputValue: '4',
+						id: 'checkbox4'
+					},{
+						boxLabel: 'forest',
+						name: 'cb-winter-5',
+						inputValue: '5',
+						id: 'checkbox5'
+					},{
+						boxLabel: 'peaks',
+						name: 'cb-winter-6',
+						inputValue: '6',
+						id: 'checkbox6'
+					},
+					{xtype: 'component', html: 'Others', cls:'x-form-check-group-label', margin: '0 0 0 -50'},
+					{
+						boxLabel: 'skilifts',
+						name: 'cb-winter-7',
+						inputValue: '7',
+						id: 'checkbox7',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
+							}
+						},
+					},{
+						boxLabel: 'metro',
+						name: 'cb-winter-8',
+						inputValue: '8',
+						id: 'checkbox8'
+					},{
+						boxLabel: 'parking',
+						name: 'cb-winter-9',
+						inputValue: '9',
+						id: 'checkbox9',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+							}
+						},
+					},{
+						boxLabel: 'sport points',
+						name: 'cb-winter-10',
+						inputValue: '10',
+						id: 'checkbox10',
+						margin: '0 0 0 -50',
+					}
+					
+					]
+					
+					
+			
+					// no longer needed: 
+					
+					/*
+					,
+					listeners: {
+							click: function() {
+							currentMapId = rec.get('id');
+							sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+							console.log('test checkboxes');
+						}
+					},
+					*/
+					
+				}
+				
+				
+				
+				,
+				{
+				title: ' Summer Info',
+            xtype: 'checkboxgroup',
+            fieldLabel: 'Single Column',
+            // Put all controls in a single column with width 100%
+            columns: 1,
+            items: [
+                {
+				boxLabel: 'Item 1',
+				name: 'cb-col-1',
+				inputValue: '1',
+				id: 'checkbox11'
+				},{
+				boxLabel: 'Item 2',
+				name: 'cb-col-2',
+				inputValue: '2',
+				checked: true,
+				id: 'checkbox12'
+				},{
+				boxLabel: 'Item 3',
+				name: 'cb-col-3',
+				inputValue: '3',
+				checked: true,
+				id: 'checkbox13',
+				}
+            ]	
+        }
+		,		
+			//charis
+			{
+				title: ' Cultural Info',
+            xtype: 'checkboxgroup',
+            fieldLabel: 'Additional Information',
+            // Put all controls in a single column with width 100%
+            columns: 1,
+            items: [
+                {
+				boxLabel: 'Arts',
+				name: 'cb-col-1',
+				inputValue: '1',
+				id: 'checkbox14',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Arts_button', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Arts_button', pressed: this.checked});
+							}
+						},				
+				},{
+				boxLabel: 'Places of Worship',
+				name: 'cb-col-2',
+				inputValue: '2',
+				//checked: true,
+				id: 'checkbox15',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Worship_button', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Worship_button', pressed: this.checked});
+							}
+						},				
+				},{
+				boxLabel: 'Sports',
+				name: 'cb-col-3',
+				inputValue: '3',
+				//checked: true,
+				id: 'checkbox16',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Sports_button', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Sports_button', pressed: this.checked});
+							}
+						},
+				},{
+				boxLabel: 'Historic Points',
+				name: 'cb-col-4',
+				inputValue: '4',
+				//checked: true,
+				id: 'checkbox17',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Historic_button', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Historic_button', pressed: this.checked});
+							}
+						},
+				}
+            ]	
+        }
+				
+				]	
+				
+				,
+				bbar: [
+				/*{
+					text: 'Select Bacon',
+					handler: function () {
+						Ext.getCmp('checkbox3').setValue(true);
+					}
+				}, '-', */
+				{
+					text: 'Select All',
+					handler: function () {
+						Ext.getCmp('checkbox1').setValue(true);
+						Ext.getCmp('checkbox2').setValue(true);
+						Ext.getCmp('checkbox3').setValue(true);
+						Ext.getCmp('checkbox4').setValue(true);
+						Ext.getCmp('checkbox5').setValue(true);
+						Ext.getCmp('checkbox6').setValue(true);
+						Ext.getCmp('checkbox7').setValue(true);
+						Ext.getCmp('checkbox8').setValue(true);
+						Ext.getCmp('checkbox9').setValue(true);
+						Ext.getCmp('checkbox10').setValue(true);
+						Ext.getCmp('checkbox11').setValue(true);
+						Ext.getCmp('checkbox12').setValue(true);
+						Ext.getCmp('checkbox13').setValue(true);
+						Ext.getCmp('checkbox14').setValue(true);
+						Ext.getCmp('checkbox15').setValue(true);
+						Ext.getCmp('checkbox16').setValue(true);
+						Ext.getCmp('checkbox17').setValue(true);
+					}
+				}, '-', {
+					text: 'Deselect All',
+					handler: function () {
+						Ext.getCmp('checkbox1').setValue(false);
+						Ext.getCmp('checkbox2').setValue(false);
+						Ext.getCmp('checkbox3').setValue(false);
+						Ext.getCmp('checkbox4').setValue(false);
+						Ext.getCmp('checkbox5').setValue(false);
+						Ext.getCmp('checkbox6').setValue(false);
+						Ext.getCmp('checkbox7').setValue(false);
+						Ext.getCmp('checkbox8').setValue(false);
+						Ext.getCmp('checkbox9').setValue(false);
+						Ext.getCmp('checkbox10').setValue(false);
+						Ext.getCmp('checkbox11').setValue(false);
+						Ext.getCmp('checkbox12').setValue(false);						
+						Ext.getCmp('checkbox13').setValue(false);
+						Ext.getCmp('checkbox14').setValue(false);
+						Ext.getCmp('checkbox15').setValue(false);
+						Ext.getCmp('checkbox16').setValue(false);
+						Ext.getCmp('checkbox17').setValue(false);
+					}
+				}]
+				
+				
+				
+				
+
 					},{
 					// The right panel presents the atlas contents with tabs.
-					title: 'Atlas Contents',
-					width: 300
+					title: 'Map Content',
+					id: 'info_low',
+					xtype: 'panel',
+					width: 300,
+					height: 400,
+					//height : 350,
+					autoScroll:true,
+					html: '<h3 style="margin:10px">Please choose a map!</h3>',
+					bodyStyle:{"background-color":'#DDDDDD'},
+				
+					//margin: '(10 10 10 10)',
+					
 					}]
 			}, {
 				// We currently use the section.
@@ -524,41 +966,100 @@ Ext.application({
 				buttonBar.add(button1); */
 				//panel.add(button1);
 				title: 'Standard Touristic Information',
+				id: 'panel_down',
 				collapsible: true,
 				resizable: false,
 				resizeHandles: 'n',
 				height: 60,
 				border: true,//
+				
+				
 				items: [
 				{
 					id: 'map-Attractions',
 					text: 'Attractions',
+					enableToggle: true,
 					xtype: 'button',//component
-					width: 255
+					width: '20%',//window.innerWidth/5,
+					pressed: true,
+					//cls: 'floater',
+					iconCls: 'add',
+					iconAlign: 'right',
+					//cls:'x-btn-text-icon'
+					//icon: 'http://sencha.com/favicon.ico',
+					icon: 'app/Statue.png',
+					listeners: {
+						click: function() {
+						// this == the button, as we are in the local scope
+						// this.setText('I was clicked!');
+						sendMessage({method: 'buttonClick', id: 'map-Attractions', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
 				},
 				{
 					id: 'map-Hotels',
 					text: 'Hotels',
+					enableToggle: true,
 					xtype: 'button',//component
-					width: 256
+					width: '20%',//window.innerWidth/5
+					pressed: true,
+					iconAlign: 'right',
+					icon: 'app/Hotel.png',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Hotels', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
 				},
 				{
 					id: 'map-Food',
 					text: 'Food',
+					enableToggle: true,
 					xtype: 'button',//component
-					width: 256
+					width: '20%',//window.innerWidth/5
+					pressed: true,
+					iconAlign: 'right',
+					icon: 'app/fastfood.png',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Food', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
 				},
 				{
 					id: 'map-Cafes-Bars',
 					text: 'Cafes-Bars',
+					enableToggle: true,
 					xtype: 'button',//component
-					width: 256
+					width: '20%',//window.innerWidth/5
+					pressed: true,
+					iconAlign: 'right',
+					icon: 'app/bar.png',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Cafes-Bars', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
 				},
 				{
 					id: 'map-Stations',
 					text: 'Stations',
+					enableToggle: true,
 					xtype: 'button',//component
-					width: 255
+					width: '20%',//window.innerWidth/5-2
+					pressed: true,
+					iconAlign: 'right',
+					icon: 'app/bus.png',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Stations', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
 				},],
 				renderTo: Ext.getBody()
 			}, {
@@ -573,7 +1074,11 @@ Ext.application({
 					cls: 'map-frame',
 					border: false
 				},
-			}]
+			}]	
 		});
+		
+		
+		
+		// initialize information of buttons needs to be set in other file!!!
 	}
 });
