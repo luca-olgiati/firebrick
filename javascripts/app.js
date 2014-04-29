@@ -228,8 +228,13 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'europe_map_pl'});
-									var e = document.getElementById('panel_down');
-									e.style.display='none';}
+									Ext.getCmp('panel_down').setDisabled(true);
+									Ext.getCmp('tab_cultural').setDisabled(true);
+									Ext.getCmp('tab_summer').setDisabled(true);
+									Ext.getCmp('tab_winter').setDisabled(true);
+									Ext.getCmp('bbar_all').setDisabled(true);
+									Ext.getCmp('bbar_none').setDisabled(true);
+									}
 									}
 									},
 									{
@@ -240,8 +245,12 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'europe_map_bm'});
-									var e = document.getElementById('panel_down');
-									e.style.display='none';}
+									Ext.getCmp('panel_down').setDisabled(true);
+									Ext.getCmp('tab_cultural').setDisabled(true);
+									Ext.getCmp('tab_summer').setDisabled(true);
+									Ext.getCmp('tab_winter').setDisabled(true);
+									Ext.getCmp('bbar_all').setDisabled(true);
+									Ext.getCmp('bbar_none').setDisabled(true);}
 									}
 									},
 									{
@@ -251,9 +260,13 @@ Ext.application({
 									listeners: {
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
-									sendMessage({method: 'loadMap', id: 'europe_map_wsd'});
-									var e = document.getElementById('panel_down');
-									e.style.display='none';
+									Ext.getCmp('panel_down').setDisabled(true);
+									Ext.getCmp('tab_cultural').setDisabled(true);
+									Ext.getCmp('tab_summer').setDisabled(true);
+									Ext.getCmp('tab_winter').setDisabled(true);
+									Ext.getCmp('bbar_all').setDisabled(true);
+									Ext.getCmp('bbar_none').setDisabled(true);
+									sendMessage({method: 'loadMap', id: 'europe_map'});
 									document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
 									}
 									}
@@ -265,8 +278,12 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'europe_map'});
-						var e = document.getElementById('panel_down');
-									e.style.display='none';
+						Ext.getCmp('panel_down').setDisabled(true);
+						Ext.getCmp('tab_cultural').setDisabled(true);
+						Ext.getCmp('tab_summer').setDisabled(true);
+						Ext.getCmp('tab_winter').setDisabled(true);
+						Ext.getCmp('bbar_all').setDisabled(true);
+						Ext.getCmp('bbar_none').setDisabled(true);
 						document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
 												
 						}
@@ -290,8 +307,13 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'culture_map'});
-									var e = document.getElementById('panel_down');
-									e.style.display='block';}
+									Ext.getCmp('panel_down').setDisabled(false);
+									Ext.getCmp('tab_cultural').setDisabled(false);
+									Ext.getCmp('tab_summer').setDisabled(true);
+									Ext.getCmp('tab_winter').setDisabled(true);
+									Ext.getCmp('tab_cultural').show(true);
+									Ext.getCmp('bbar_all').setDisabled(false);
+									Ext.getCmp('bbar_none').setDisabled(false);}
 									}
 									}
 								]	
@@ -301,8 +323,13 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'culture_map'});
-						var e = document.getElementById('panel_down');
-									e.style.display='block';}
+						Ext.getCmp('panel_down').setDisabled(false);
+						Ext.getCmp('tab_cultural').setDisabled(false);
+						Ext.getCmp('tab_summer').setDisabled(true);
+						Ext.getCmp('tab_winter').setDisabled(true);
+						Ext.getCmp('tab_cultural').show(true);
+						Ext.getCmp('bbar_all').setDisabled(false);
+						Ext.getCmp('bbar_none').setDisabled(false);}
 					},
 				},
 
@@ -324,8 +351,16 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'saas_fee'});
-									var e = document.getElementById('panel_down');
-									e.style.display='block';}
+									Ext.getCmp('panel_down').setDisabled(false);
+									Ext.getCmp('tab_winter').setDisabled(false);
+									Ext.getCmp('tab_cultural').setDisabled(true);
+									Ext.getCmp('tab_summer').setDisabled(true);
+									Ext.getCmp('tab_winter').show(true)
+									Ext.getCmp('bbar_all').setDisabled(false);
+									Ext.getCmp('bbar_none').setDisabled(false);;
+									
+									
+									}
 									}
 									}
 								]	
@@ -334,9 +369,18 @@ Ext.application({
 					listeners: {
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
+					
+						
 						sendMessage({method: 'loadMap', id: 'saas_fee'});
-						var e = document.getElementById('panel_down');
-									e.style.display='block';}
+						Ext.getCmp('panel_down').setDisabled(false);
+						Ext.getCmp('tab_winter').setDisabled(false);
+						Ext.getCmp('tab_cultural').setDisabled(true);
+						Ext.getCmp('tab_summer').setDisabled(true);
+						Ext.getCmp('tab_winter').show(true)
+						Ext.getCmp('bbar_all').setDisabled(false);
+						Ext.getCmp('bbar_none').setDisabled(false);;
+						
+						}
 					},
 				},
 
@@ -358,8 +402,13 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'wms_greece'});
-									var e = document.getElementById('panel_down');
-									e.style.display='block';}
+									Ext.getCmp('panel_down').setDisabled(false);
+									Ext.getCmp('tab_summer').setDisabled(false);
+									Ext.getCmp('tab_cultural').setDisabled(true);
+									Ext.getCmp('tab_winter').setDisabled(true);
+									Ext.getCmp('tab_summer').show(true);
+									Ext.getCmp('bbar_all').setDisabled(false);
+									Ext.getCmp('bbar_none').setDisabled(false);}
 									}
 									}
 								]	
@@ -369,8 +418,13 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'wms_greece'});
-						var e = document.getElementById('panel_down');
-									e.style.display='block';}
+						Ext.getCmp('panel_down').setDisabled(false);
+						Ext.getCmp('tab_summer').setDisabled(false);
+						Ext.getCmp('tab_cultural').setDisabled(true);
+						Ext.getCmp('tab_winter').setDisabled(true);
+						Ext.getCmp('tab_summer').show(true);
+						Ext.getCmp('bbar_all').setDisabled(false);
+						Ext.getCmp('bbar_none').setDisabled(false);}
 					},
 				},
 				
@@ -396,12 +450,116 @@ Ext.application({
 				collapsible: true,
 				resizable: true,
 				resizeHandles: 'w',
-				activeTab: 0,
-				
-				items: [{
+				//activeTab: 0,
+				layout: {
+				type: 'vbox',
+				align: 'stretch',
+				pack: 'start',
+				},
 				width: 300,
-				//minHeight: 350,
-				height: 350,
+				items: [
+				
+				
+		{id: 'panel_down',
+		 disabled: true,
+		layout: {
+			type: 'hbox',
+			align: 'stretch',
+			pack: 'start',
+			},
+			items:[
+				{
+					id: 'map-Attractions',
+					
+					//text: 'Attractions',
+					enableToggle: true,
+					xtype: 'button',
+					flex: 1,
+					pressed: true,
+					icon: 'app/icon_attraction.png', // has to be 32by32 pixels!
+					padding: '0 13 0 13',
+					scale: 'large',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Attractions', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
+				},
+				{
+					id: 'map-Hotels',
+					//text: 'Hotels',
+					enableToggle: true,
+					xtype: 'button',//component
+					flex: 1,
+					pressed: true,
+					icon: 'app/icon_hotel.png', // has to be 32by32 pixels!
+					padding: '0 13 0 13',
+					scale: 'large',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Hotels', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
+				},
+				{
+					id: 'map-Food',
+					//text: 'Food',
+					enableToggle: true,
+					xtype: 'button',//component
+					flex: 1,
+					pressed: true,
+					icon: 'app/icon_fastfood.png', // has to be 32by32 pixels!
+					padding: '0 13 0 13',
+					scale: 'large',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Food', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
+				},
+				{
+					id: 'map-Cafes-Bars',
+					//text: 'Cafes-Bars',
+					enableToggle: true,
+					xtype: 'button',//component
+					flex: 1,
+					pressed: true,
+					icon: 'app/icon_bar.png', // has to be 32by32 pixels!
+					padding: '0 13 0 13',
+					scale: 'large',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Cafes-Bars', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
+				},
+				{
+					id: 'map-Stations',
+					//text: 'Stations',
+					enableToggle: true,
+					xtype: 'button',//component
+					flex: 1,
+					pressed: true,
+					icon: 'app/icon_station.png', // has to be 32by32 pixels!
+					padding: '0 13 0 13',
+					scale: 'large',
+					listeners: {
+						click: function() {
+						sendMessage({method: 'buttonClick', id: 'map-Stations', pressed: this.pressed});
+						console.log(this.pressed,this);
+					}
+					}
+				}
+				
+				]
+			},
+				
+				{
+				flex: 1,
 				xtype: 'tabpanel',
 				items: [
 						/**{
@@ -527,7 +685,7 @@ Ext.application({
 						}
 					},
 				}*/
-				, 
+				
 				
 				/*
 					{
@@ -686,146 +844,12 @@ Ext.application({
 				]	
 				//					
 				*/
-				{
-					// The third tab presents a thematic atlas content.
-					title: 'Winter Info',
-					//id: 'tab3',
-					//tabIndex: 2,
-					xtype: 'checkboxgroup',
-					fieldLabel: 'Winter',
-					//cls: 'x-check-group-alt',  // macht nur e hintergrundfarb... 
-					columns: 1,
-					
-					
-					defaultType: 'checkboxfield',  // gilt als xtype für sämtliche untenstehende items
-					items: [
-						{xtype: 'component', html: 'Daily needs', cls:'x-form-check-group-label'},
-						{
-						boxLabel: 'Shops',
-						name: 'cb-winter-1',
-						inputValue: '1',
-						id: 'checkbox1'
-					}, {
-						boxLabel: 'bank&atm',
-						name: 'cb-winter-2',
-						inputValue: '2',
-						checked: true,
-						id: 'checkbox2'
-					},  {
-						boxLabel: 'pharmacy',
-						name: 'cb-winter-3',
-						inputValue: '3',
-						checked: true,
-						id: 'checkbox3',
-						
-					},
-					
-					{xtype: 'component', html: 'Nature', cls:'x-form-check-group-label', margin: '0 0 0 -50'},
-					{
-						boxLabel: 'glaciers',
-						name: 'cb-winter-4',
-						inputValue: '4',
-						id: 'checkbox4'
-					},{
-						boxLabel: 'forest',
-						name: 'cb-winter-5',
-						inputValue: '5',
-						id: 'checkbox5'
-					},{
-						boxLabel: 'peaks',
-						name: 'cb-winter-6',
-						inputValue: '6',
-						id: 'checkbox6'
-					},
-					{xtype: 'component', html: 'Others', cls:'x-form-check-group-label', margin: '0 0 0 -50'},
-					{
-						boxLabel: 'skilifts',
-						name: 'cb-winter-7',
-						inputValue: '7',
-						id: 'checkbox7',
-						listeners: {
-							change: function() {
-								sendMessage({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
-								console.log({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
-							}
-						},
-					},{
-						boxLabel: 'metro',
-						name: 'cb-winter-8',
-						inputValue: '8',
-						id: 'checkbox8'
-					},{
-						boxLabel: 'parking',
-						name: 'cb-winter-9',
-						inputValue: '9',
-						id: 'checkbox9',
-						listeners: {
-							change: function() {
-								sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
-								console.log({method: 'buttonClick', id: 'Parking', pressed: this.checked});
-							}
-						},
-					},{
-						boxLabel: 'sport points',
-						name: 'cb-winter-10',
-						inputValue: '10',
-						id: 'checkbox10',
-						margin: '0 0 0 -50',
-					}
-					
-					]
-					
-					
-			
-					// no longer needed: 
-					
-					/*
-					,
-					listeners: {
-							click: function() {
-							currentMapId = rec.get('id');
-							sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
-							console.log('test checkboxes');
-						}
-					},
-					*/
-					
-				}
 				
-				
-				
-				,
-				{
-				title: ' Summer Info',
-            xtype: 'checkboxgroup',
-            fieldLabel: 'Single Column',
-            // Put all controls in a single column with width 100%
-            columns: 1,
-            items: [
-                {
-				boxLabel: 'Item 1',
-				name: 'cb-col-1',
-				inputValue: '1',
-				id: 'checkbox11'
-				},{
-				boxLabel: 'Item 2',
-				name: 'cb-col-2',
-				inputValue: '2',
-				checked: true,
-				id: 'checkbox12'
-				},{
-				boxLabel: 'Item 3',
-				name: 'cb-col-3',
-				inputValue: '3',
-				checked: true,
-				id: 'checkbox13',
-				}
-            ]	
-        }
-		,		
-			//charis
-			{
-				title: ' Cultural Info',
+							{ // cultural infos
+				title: ' Cultural',
+				autoScroll:true,
+				disabled: true,
+				id: 'tab_cultural',
             xtype: 'checkboxgroup',
             fieldLabel: 'Additional Information',
             // Put all controls in a single column with width 100%
@@ -882,10 +906,173 @@ Ext.application({
             ]	
         }
 				
+				,{ // Winter infos
+					// The third tab presents a thematic atlas content.
+					title: 'Winter',
+					autoScroll:true,
+					disabled: true,
+					id: 'tab_winter',
+					//tabIndex: 2,
+					xtype: 'checkboxgroup',
+					//fieldLabel: 'Winter',
+					//cls: 'x-check-group-alt',  // macht nur e hintergrundfarb... 
+					columns: 1,
+					
+					
+					defaultType: 'checkboxfield',  // gilt als xtype für sämtliche untenstehende items
+					items: [
+						{xtype: 'component', html: 'Daily needs', cls:'x-form-check-group-label', margin: '0 0 0 10'},
+						{
+						boxLabel: 'Shops',
+						name: 'cb-winter-1',
+						inputValue: '1',
+						id: 'checkbox1'
+					}, {
+						boxLabel: 'bank&atm',
+						name: 'cb-winter-2',
+						inputValue: '2',
+						checked: true,
+						id: 'checkbox2'
+					},  {
+						boxLabel: 'pharmacy',
+						name: 'cb-winter-3',
+						inputValue: '3',
+						checked: true,
+						id: 'checkbox3',
+						
+					},
+					
+					{xtype: 'component', html: 'Nature', cls:'x-form-check-group-label', margin: '0 0 0 10'},
+					{
+						boxLabel: 'glaciers',
+						name: 'cb-winter-4',
+						inputValue: '4',
+						id: 'checkbox4'
+					},{
+						boxLabel: 'forest',
+						name: 'cb-winter-5',
+						inputValue: '5',
+						id: 'checkbox5'
+					},{
+						boxLabel: 'peaks',
+						name: 'cb-winter-6',
+						inputValue: '6',
+						id: 'checkbox6'
+					},
+					{xtype: 'component', html: 'Others', cls:'x-form-check-group-label', margin: '0 0 0 5'},
+					{
+						boxLabel: 'skilifts',
+						name: 'cb-winter-7',
+						inputValue: '7',
+						id: 'checkbox7',
+						margin: '0 0 0 10',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Skilifts', pressed: this.checked});
+							}
+						},
+					},{
+						boxLabel: 'metro',
+						name: 'cb-winter-8',
+						inputValue: '8',
+						id: 'checkbox8',
+						margin: '0 0 0 10',
+					},{
+						boxLabel: 'parking',
+						name: 'cb-winter-9',
+						inputValue: '9',
+						id: 'checkbox9',
+						margin: '0 0 0 10',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+							}
+						},
+					},{
+						boxLabel: 'sport points',
+						name: 'cb-winter-10',
+						inputValue: '10',
+						id: 'checkbox10',
+						margin: '0 0 0 10',
+					}
+					
+					]
+					
+					
+			
+					// no longer needed: 
+					
+					/*
+					,
+					listeners: {
+							click: function() {
+							currentMapId = rec.get('id');
+							sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+							console.log('test checkboxes');
+						}
+					},
+					*/
+					
+				}
+				
+				
+				
+				,
+				{ // summer infos
+				title: ' Summer',
+				id: 'tab_summer',
+				autoScroll:true,
+				disabled: true,
+            xtype: 'checkboxgroup',
+            fieldLabel: 'Single Column',
+            // Put all controls in a single column with width 100%
+            columns: 1,
+            items: [
+                {
+				boxLabel: 'Item 1',
+				name: 'cb-col-1',
+				inputValue: '1',
+				id: 'checkbox11'
+				},{
+				boxLabel: 'Item 2',
+				name: 'cb-col-2',
+				inputValue: '2',
+				checked: true,
+				id: 'checkbox12'
+				},{
+				boxLabel: 'Item 3',
+				name: 'cb-col-3',
+				inputValue: '3',
+				checked: true,
+				id: 'checkbox13',
+				}
+            ]	
+        }
+		,
+
+		// luca
+		
+		{ // Europe infos
+				title: ' Europe',
+				id: 'europe_ls',
+				autoScroll:true,
+				disabled: false,
+            //xtype: 'checkboxgroup',
+				class: "olControlLayerSwitcher",
+            /*items: [
+                }
+				} 
+            ]	*/
+        }
+		
+				
 				]	
 				
 				,
 				bbar: [
+				
 				/*{
 					text: 'Select Bacon',
 					handler: function () {
@@ -894,6 +1081,8 @@ Ext.application({
 				}, '-', */
 				{
 					text: 'Select All',
+					id: 'bbar_all',
+					disabled: true,
 					handler: function () {
 						Ext.getCmp('checkbox1').setValue(true);
 						Ext.getCmp('checkbox2').setValue(true);
@@ -915,6 +1104,8 @@ Ext.application({
 					}
 				}, '-', {
 					text: 'Deselect All',
+					id: 'bbar_none',
+					disabled: true,
 					handler: function () {
 						Ext.getCmp('checkbox1').setValue(false);
 						Ext.getCmp('checkbox2').setValue(false);
@@ -946,27 +1137,23 @@ Ext.application({
 					id: 'info_low',
 					xtype: 'panel',
 					width: 300,
-					height: 400,
+					flex: 1,
 					//height : 350,
 					autoScroll:true,
+					//padding: '10 10 10 10',
 					html: '<h3 style="margin:10px">Please choose a map!</h3>',
 					bodyStyle:{"background-color":'#DDDDDD'},
-				
-					//margin: '(10 10 10 10)',
 					
 					}]
-			}, {
+			}, /*{
 				// We currently use the section.
 				region: 'south',
 				xtype: 'panel',//
-				/* JPanel buttonBar = new JPanel();
-				buttonBar.setLayout( (new GridLayout(1,3) );
-				buttonBar.add(button1);
-				buttonBar.add(button1);
-				buttonBar.add(button1); */
+				
+				
 				//panel.add(button1);
 				title: 'Standard Touristic Information',
-				id: 'panel_down',
+				id: 'panel_down2',
 				collapsible: true,
 				resizable: false,
 				resizeHandles: 'n',
@@ -976,7 +1163,7 @@ Ext.application({
 				
 				items: [
 				{
-					id: 'map-Attractions',
+					id: 'map-Attractions2',
 					text: 'Attractions',
 					enableToggle: true,
 					xtype: 'button',//component
@@ -998,7 +1185,7 @@ Ext.application({
 					}
 				},
 				{
-					id: 'map-Hotels',
+					id: 'map-Hotels2',
 					text: 'Hotels',
 					enableToggle: true,
 					xtype: 'button',//component
@@ -1014,7 +1201,7 @@ Ext.application({
 					}
 				},
 				{
-					id: 'map-Food',
+					id: 'map-Food2',
 					text: 'Food',
 					enableToggle: true,
 					xtype: 'button',//component
@@ -1030,7 +1217,7 @@ Ext.application({
 					}
 				},
 				{
-					id: 'map-Cafes-Bars',
+					id: 'map-Cafes-Bars2',
 					text: 'Cafes-Bars',
 					enableToggle: true,
 					xtype: 'button',//component
@@ -1046,7 +1233,7 @@ Ext.application({
 					}
 				},
 				{
-					id: 'map-Stations',
+					id: 'map-Stations2',
 					text: 'Stations',
 					enableToggle: true,
 					xtype: 'button',//component
@@ -1061,8 +1248,10 @@ Ext.application({
 					}
 					}
 				},],
-				renderTo: Ext.getBody()
-			}, {
+				//renderTo: Ext.getBody()
+			}*/
+			
+			, {
 				// The map finally is presented in the center as an 'iframe', an embedded element.
 				region: 'center',
 				border: false,
