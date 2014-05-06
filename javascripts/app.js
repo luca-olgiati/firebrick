@@ -7,6 +7,15 @@
 	2013-2-4: Added comments
 */
 
+		function ExpandCollapse(theDiv) { 
+		el = document.getElementById(theDiv);
+		if(el.style.display == 'none'){
+			el.style.display = 'block'; }
+		else {
+			el.style.display = 'none'; }
+		}
+
+
 /*
 	Load additional classes including direct dependencies.
 */
@@ -54,8 +63,12 @@ Ext.application({
 					}
 				}
 				else {
-					// Reuses the map but loads with new parameters.
-					loadMap();
+					// load a new map anyway
+					iframe['data-ref'] = params.src;
+					iframe.src = params.src;
+					iframe.onload = function(evt) {
+						loadMap();
+					}
 				}
 				break;
 				case 'buttonClick': 
@@ -206,6 +219,7 @@ Ext.application({
 				// A toolbar is placed at the top.
 				region: 'north',
 				html: '<h2 class="x-pamel-header">Touristic Atlas of Europe</h2>',
+				id: 'titlemap',
 				xtype: 'toolbar',
 				height: 60,
 				// Toolbar menus follow here.
@@ -228,12 +242,6 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'europe_map_pl'});
-									Ext.getCmp('panel_down').setDisabled(true);
-									Ext.getCmp('tab_cultural').setDisabled(true);
-									Ext.getCmp('tab_summer').setDisabled(true);
-									Ext.getCmp('tab_winter').setDisabled(true);
-									Ext.getCmp('bbar_all').setDisabled(true);
-									Ext.getCmp('bbar_none').setDisabled(true);
 									}
 									}
 									},
@@ -245,12 +253,7 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'europe_map_bm'});
-									Ext.getCmp('panel_down').setDisabled(true);
-									Ext.getCmp('tab_cultural').setDisabled(true);
-									Ext.getCmp('tab_summer').setDisabled(true);
-									Ext.getCmp('tab_winter').setDisabled(true);
-									Ext.getCmp('bbar_all').setDisabled(true);
-									Ext.getCmp('bbar_none').setDisabled(true);}
+									}
 									}
 									},
 									{
@@ -260,12 +263,6 @@ Ext.application({
 									listeners: {
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
-									Ext.getCmp('panel_down').setDisabled(true);
-									Ext.getCmp('tab_cultural').setDisabled(true);
-									Ext.getCmp('tab_summer').setDisabled(true);
-									Ext.getCmp('tab_winter').setDisabled(true);
-									Ext.getCmp('bbar_all').setDisabled(true);
-									Ext.getCmp('bbar_none').setDisabled(true);
 									sendMessage({method: 'loadMap', id: 'europe_map'});
 									document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
 									}
@@ -278,12 +275,6 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'europe_map'});
-						Ext.getCmp('panel_down').setDisabled(true);
-						Ext.getCmp('tab_cultural').setDisabled(true);
-						Ext.getCmp('tab_summer').setDisabled(true);
-						Ext.getCmp('tab_winter').setDisabled(true);
-						Ext.getCmp('bbar_all').setDisabled(true);
-						Ext.getCmp('bbar_none').setDisabled(true);
 						document.getElementById("info_low-body").innerHTML='<h2 style="margin:10px">Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
 												
 						}
@@ -307,13 +298,7 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'culture_map'});
-									Ext.getCmp('panel_down').setDisabled(false);
-									Ext.getCmp('tab_cultural').setDisabled(false);
-									Ext.getCmp('tab_summer').setDisabled(true);
-									Ext.getCmp('tab_winter').setDisabled(true);
-									Ext.getCmp('tab_cultural').show(true);
-									Ext.getCmp('bbar_all').setDisabled(false);
-									Ext.getCmp('bbar_none').setDisabled(false);}
+									}
 									}
 									}
 								]	
@@ -323,14 +308,8 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'culture_map'});
-						Ext.getCmp('panel_down').setDisabled(false);
-						Ext.getCmp('tab_cultural').setDisabled(false);
-						Ext.getCmp('tab_summer').setDisabled(true);
-						Ext.getCmp('tab_winter').setDisabled(true);
-						Ext.getCmp('tab_cultural').show(true);
-						Ext.getCmp('bbar_all').setDisabled(false);
-						Ext.getCmp('bbar_none').setDisabled(false);}
-					},
+						}
+						},
 				},
 
 				// drop down menu for winter maps
@@ -351,14 +330,7 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'saas_fee'});
-									Ext.getCmp('panel_down').setDisabled(false);
-									Ext.getCmp('tab_winter').setDisabled(false);
-									Ext.getCmp('tab_cultural').setDisabled(true);
-									Ext.getCmp('tab_summer').setDisabled(true);
-									Ext.getCmp('tab_winter').show(true)
-									Ext.getCmp('bbar_all').setDisabled(false);
-									Ext.getCmp('bbar_none').setDisabled(false);;
-									
+										
 									
 									}
 									}
@@ -372,13 +344,6 @@ Ext.application({
 					
 						
 						sendMessage({method: 'loadMap', id: 'saas_fee'});
-						Ext.getCmp('panel_down').setDisabled(false);
-						Ext.getCmp('tab_winter').setDisabled(false);
-						Ext.getCmp('tab_cultural').setDisabled(true);
-						Ext.getCmp('tab_summer').setDisabled(true);
-						Ext.getCmp('tab_winter').show(true)
-						Ext.getCmp('bbar_all').setDisabled(false);
-						Ext.getCmp('bbar_none').setDisabled(false);;
 						
 						}
 					},
@@ -402,13 +367,7 @@ Ext.application({
 									// A click on a tree menu item start the loading of a map.
 									click: function(view, rec, item, index, eventObj) {
 									sendMessage({method: 'loadMap', id: 'wms_greece'});
-									Ext.getCmp('panel_down').setDisabled(false);
-									Ext.getCmp('tab_summer').setDisabled(false);
-									Ext.getCmp('tab_cultural').setDisabled(true);
-									Ext.getCmp('tab_winter').setDisabled(true);
-									Ext.getCmp('tab_summer').show(true);
-									Ext.getCmp('bbar_all').setDisabled(false);
-									Ext.getCmp('bbar_none').setDisabled(false);}
+									}
 									}
 									}
 								]	
@@ -418,14 +377,8 @@ Ext.application({
 						// A click on a tree menu item start the loading of a map.
 						click: function(view, rec, item, index, eventObj) {
 						sendMessage({method: 'loadMap', id: 'wms_greece'});
-						Ext.getCmp('panel_down').setDisabled(false);
-						Ext.getCmp('tab_summer').setDisabled(false);
-						Ext.getCmp('tab_cultural').setDisabled(true);
-						Ext.getCmp('tab_winter').setDisabled(true);
-						Ext.getCmp('tab_summer').show(true);
-						Ext.getCmp('bbar_all').setDisabled(false);
-						Ext.getCmp('bbar_none').setDisabled(false);}
-					},
+						}
+						},
 				},
 				
 				/**
@@ -562,6 +515,24 @@ Ext.application({
 				flex: 1,
 				xtype: 'tabpanel',
 				items: [
+				
+				
+				
+				{ // Europe infos
+				title: ' Europe',
+				id: 'tab_europe',
+				autoScroll:true,
+				disabled: true, 
+				//padding: '13 13 13 13',
+				
+				//bodyStyle:{"background-color":'#ADF123',"font-size": "13px" , "font-weight":"bold" },
+				
+				}
+
+					
+				,
+				
+				
 						/**{
 					// The first tab presents a geographic atlas content as a tree.
 					title: 'Geographical Info',
@@ -926,42 +897,77 @@ Ext.application({
 						boxLabel: 'Shops',
 						name: 'cb-winter-1',
 						inputValue: '1',
-						id: 'checkbox1'
+						id: 'checkbox1',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Shops', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Shops', pressed: this.checked});
+							}
+						},
 					}, {
-						boxLabel: 'bank&atm',
+						boxLabel: 'Bank & ATM',
 						name: 'cb-winter-2',
 						inputValue: '2',
 						checked: true,
-						id: 'checkbox2'
+						id: 'checkbox2',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'bank&atm', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'bank&atm', pressed: this.checked});
+							}
+						},
 					},  {
-						boxLabel: 'pharmacy',
+						boxLabel: 'Pharmacy',
 						name: 'cb-winter-3',
 						inputValue: '3',
 						checked: true,
 						id: 'checkbox3',
-						
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Pharmacy', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Pharmacy', pressed: this.checked});
+							}
+						},
 					},
 					
 					{xtype: 'component', html: 'Nature', cls:'x-form-check-group-label', margin: '0 0 0 10'},
 					{
-						boxLabel: 'glaciers',
+						boxLabel: 'Glaciers',
 						name: 'cb-winter-4',
 						inputValue: '4',
-						id: 'checkbox4'
+						id: 'checkbox4',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Glaciers', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Glaciers', pressed: this.checked});
+							}
+						},
 					},{
-						boxLabel: 'forest',
+						boxLabel: 'Forests',
 						name: 'cb-winter-5',
 						inputValue: '5',
-						id: 'checkbox5'
+						id: 'checkbox5',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Forests', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Forests', pressed: this.checked});
+							}
+						},
 					},{
-						boxLabel: 'peaks',
+						boxLabel: 'Peaks',
 						name: 'cb-winter-6',
 						inputValue: '6',
-						id: 'checkbox6'
+						id: 'checkbox6',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Peaks', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Peaks', pressed: this.checked});
+							}
+						},
 					},
 					{xtype: 'component', html: 'Others', cls:'x-form-check-group-label', margin: '0 0 0 5'},
 					{
-						boxLabel: 'skilifts',
+						boxLabel: 'Skilifts',
 						name: 'cb-winter-7',
 						inputValue: '7',
 						id: 'checkbox7',
@@ -973,29 +979,53 @@ Ext.application({
 							}
 						},
 					},{
-						boxLabel: 'metro',
+						boxLabel: 'Metro',
 						name: 'cb-winter-8',
 						inputValue: '8',
 						id: 'checkbox8',
 						margin: '0 0 0 10',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Metro', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Metro', pressed: this.checked});
+							}
+						},
 					},{
-						boxLabel: 'parking',
+						boxLabel: 'Parkings',
 						name: 'cb-winter-9',
 						inputValue: '9',
 						id: 'checkbox9',
 						margin: '0 0 0 10',
 						listeners: {
 							change: function() {
-								sendMessage({method: 'buttonClick', id: 'Parking', pressed: this.checked});
-								console.log({method: 'buttonClick', id: 'Parking', pressed: this.checked});
+								sendMessage({method: 'buttonClick', id: 'Parkings', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Parkings', pressed: this.checked});
 							}
 						},
 					},{
-						boxLabel: 'sport points',
+						boxLabel: '<img src="app/icon_fastfood.png" alt="ICON" height="42" width="42">Sport points',
 						name: 'cb-winter-10',
 						inputValue: '10',
 						id: 'checkbox10',
 						margin: '0 0 0 10',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Sportpoints', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Sportpoints', pressed: this.checked});
+							}
+						},
+					},{
+						boxLabel: 'Toilets',
+						name: 'cb-winter-11',
+						inputValue: '10',
+						id: 'checkbox18',
+						margin: '0 0 0 10',
+						listeners: {
+							change: function() {
+								sendMessage({method: 'buttonClick', id: 'Toilets', pressed: this.checked});
+								console.log({method: 'buttonClick', id: 'Toilets', pressed: this.checked});
+							}
+						},
 					}
 					
 					]
@@ -1026,48 +1056,117 @@ Ext.application({
 				autoScroll:true,
 				disabled: true,
             xtype: 'checkboxgroup',
-            fieldLabel: 'Single Column',
+            //fieldLabel: 'Summer activities',
             // Put all controls in a single column with width 100%
             columns: 1,
+			defaultType: 'checkboxfield',
             items: [
+				{xtype: 'component', html: 'Water activities', cls:'x-form-check-group-label', margin: '10 0 0 0'},
                 {
-				boxLabel: 'Item 1',
+				boxLabel: 'Swimming - Beaches',
 				name: 'cb-col-1',
 				inputValue: '1',
-				id: 'checkbox11'
+				id: 'checkbox20',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Beaches_button', pressed: this.checked});
+						console.log('ok');
+					}
+				},				
 				},{
-				boxLabel: 'Item 2',
+				boxLabel: 'Blue-Flag beaches',
 				name: 'cb-col-2',
 				inputValue: '2',
-				checked: true,
-				id: 'checkbox12'
+				//checked: true,
+				id: 'checkbox21',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Blue_Flag_button', pressed: this.checked});
+					}
+				},								
 				},{
-				boxLabel: 'Item 3',
+				boxLabel: 'Diving',
 				name: 'cb-col-3',
 				inputValue: '3',
-				checked: true,
-				id: 'checkbox13',
-				}
+				//checked: true,
+				id: 'checkbox22',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Diving_button', pressed: this.checked});
+					}
+				},				
+				},{
+				boxLabel: 'Sailing',
+				name: 'cb-col-4',
+				inputValue: '4',
+				//checked: true,
+				id: 'checkbox23',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Sailing_button', pressed: this.checked});
+					}
+				},				
+				},{
+				boxLabel: 'Water sports',
+				name: 'cb-col-5',
+				inputValue: '5',
+				//checked: true,
+				id: 'checkbox24',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'WaterSports_button', pressed: this.checked});
+					}
+				},				
+				},{
+				boxLabel: 'Water park',
+				name: 'cb-col-6',
+				inputValue: '6',
+				//checked: true,
+				id: 'checkbox25',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'WaterPark_button', pressed: this.checked});
+					}
+				},				
+				},
+				{xtype: 'component', html: 'Land activities', cls:'x-form-check-group-label', margin: '10 5 0 0'},{
+				boxLabel: 'Horse riding',
+				name: 'cb-col-7',
+				inputValue: '7',
+				//checked: true,
+				id: 'checkbox26',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Horseriding_button', pressed: this.checked});
+					}
+				},				
+				},	
+				{xtype: 'component', html: 'Other activities', cls:'x-form-check-group-label', margin: '10 5 0 0'},{
+				boxLabel: 'Golf',
+				name: 'cb-col-8',
+				inputValue: '8',
+				//checked: true,
+				id: 'checkbox27',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Golf_button', pressed: this.checked});
+					}
+				},				
+				},{
+				boxLabel: 'Nature reserved places',
+				name: 'cb-col-9',
+				inputValue: '9',
+				//checked: true,
+				id: 'checkbox19',
+				listeners: {
+					change: function() {
+						sendMessage({method: 'buttonClick', id: 'Nature_button', pressed: this.checked});
+					}
+				},					
+				}		
             ]	
         }
 		,
-
-		// luca
-		
-		{ // Europe infos
-				title: ' Europe',
-				id: 'europe_ls',
-				autoScroll:true,
-				disabled: false,
-            //xtype: 'checkboxgroup',
-				class: "olControlLayerSwitcher",
-            /*items: [
-                }
-				} 
-            ]	*/
-        }
-		
-				
 				]	
 				
 				,
@@ -1101,6 +1200,16 @@ Ext.application({
 						Ext.getCmp('checkbox15').setValue(true);
 						Ext.getCmp('checkbox16').setValue(true);
 						Ext.getCmp('checkbox17').setValue(true);
+						Ext.getCmp('checkbox18').setValue(true);
+						Ext.getCmp('checkbox19').setValue(true);
+						Ext.getCmp('checkbox20').setValue(true);
+						Ext.getCmp('checkbox21').setValue(true);
+						Ext.getCmp('checkbox22').setValue(true);
+						Ext.getCmp('checkbox23').setValue(true);
+						Ext.getCmp('checkbox24').setValue(true);
+						Ext.getCmp('checkbox25').setValue(true);
+						Ext.getCmp('checkbox26').setValue(true);
+						Ext.getCmp('checkbox27').setValue(true);						
 					}
 				}, '-', {
 					text: 'Deselect All',
@@ -1124,6 +1233,16 @@ Ext.application({
 						Ext.getCmp('checkbox15').setValue(false);
 						Ext.getCmp('checkbox16').setValue(false);
 						Ext.getCmp('checkbox17').setValue(false);
+						Ext.getCmp('checkbox18').setValue(false);
+						Ext.getCmp('checkbox19').setValue(false);
+						Ext.getCmp('checkbox20').setValue(false);
+						Ext.getCmp('checkbox21').setValue(false);
+						Ext.getCmp('checkbox22').setValue(false);
+						Ext.getCmp('checkbox23').setValue(false);
+						Ext.getCmp('checkbox24').setValue(false);
+						Ext.getCmp('checkbox25').setValue(false);
+						Ext.getCmp('checkbox26').setValue(false);
+						Ext.getCmp('checkbox27').setValue(false);
 					}
 				}]
 				
@@ -1142,7 +1261,7 @@ Ext.application({
 					autoScroll:true,
 					//padding: '10 10 10 10',
 					html: '<h3 style="margin:10px">Please choose a map!</h3>',
-					bodyStyle:{"background-color":'#DDDDDD'},
+					
 					
 					}]
 			}, /*{
