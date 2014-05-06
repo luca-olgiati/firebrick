@@ -25,6 +25,7 @@
 
 <style type="text/css" media="screen">
 
+
 luca { font-size:180px; font-family:"Arial Black",Arial,sans-serif; color:#73FBE7; margin-left:2cm }
 
 </style> 
@@ -32,8 +33,17 @@ luca { font-size:180px; font-family:"Arial Black",Arial,sans-serif; color:#73FBE
 
 <script type="text/javascript">
 
-
-
+parent.Ext.getCmp('panel_down').setDisabled(true);
+parent.Ext.getCmp('tab_cultural').setDisabled(true);
+parent.Ext.getCmp('tab_summer').setDisabled(true);
+parent.Ext.getCmp('tab_winter').setDisabled(true);
+parent.Ext.getCmp('tab_europe').setDisabled(false);
+parent.Ext.getCmp('bbar_all').setDisabled(true);
+parent.Ext.getCmp('bbar_none').setDisabled(true);
+parent.Ext.getCmp('tab_europe').show(true);
+parent.document.getElementById("info_low-body").innerHTML='<h2>Welcome to Europe</h2> Enjoy your selections and Point informations on this map and have a nice Day';		
+parent.document.getElementById("titlemap").innerHTML='Touristic Atlas of Europe_________choosen map: Europe';					
+						
 
 // SECTION 1: INIT
 function init(){
@@ -54,7 +64,7 @@ function init(){
 						strokeOpacity: 1,
 						strokeWidth: 1,
 						fillColor: "#00FF00",
-						fillOpacity: 1,
+						fillOpacity: 0.5,
 						//cursor: "pointer",
 						//label: "${Full_name}", //perhaps: http://gis.stackexchange.com/questions/29584/openlayers-attribute-substitution-failing-on-kml-file
 						//label: "Testtext",
@@ -70,7 +80,7 @@ function init(){
 						strokeOpacity: 1,
 						strokeWidth: 1,
 						fillColor: "#FF0000",
-						fillOpacity: 0.8,
+						fillOpacity: 0.5,
 						graphicZIndex: 2,
 						//cursor: "pointer"
 						})
@@ -78,57 +88,70 @@ function init(){
 		// definition of styles for cluster points
 		// winter
 		style_winter= new OpenLayers.StyleMap({"default": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#4444FF",
-				fillOpacity: 0.8,
-				strokeColor: "#4444FF",
-				strokeWidth: 1,
-				strokeOpacity: 0.8,
+				externalGraphic: "symbol_winter_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
 				cursor: "pointer",
-				}),														
+				}),
+				
 				"select": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#8888FF",
-				fillOpacity: 0.8,
-				strokeColor: "#4444FF",
-				strokeWidth: 1,
-				strokeOpacity: 0.8
-				}), 
-		});
+				externalGraphic: "symbol_winter_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
+				graphicOpacity: 0.5
+				}) 
+				});
 		// summer
 		style_summer=new OpenLayers.StyleMap({"default": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#FF4444",
-				fillOpacity: 0.8,
-				strokeColor: "#FF4444",
-				strokeWidth: 1,
-				strokeOpacity: 0.8
+				externalGraphic: "symbol_summer_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
 				}),
+				
 				"select": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#FF8888",
-				fillOpacity: 0.8,
-				strokeColor: "#FF4444",
-				strokeWidth: 1,
-				strokeOpacity: 0.8
+				externalGraphic: "symbol_summer_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
+				graphicOpacity: 0.5
 				}) 
 				});
 		// cultural
 		style_cultural=new OpenLayers.StyleMap({"default": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#999999",
-				fillOpacity: 0.8,
-				strokeColor: "#FF4444",
-				strokeWidth: 1,
-				strokeOpacity: 0.8
+		
+				externalGraphic: "symbol_cultural_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
 				}),
+				
 				"select": new OpenLayers.Style({
-				pointRadius: 10,
-				fillColor: "#999999",
-				fillOpacity: 0.8,
-				strokeColor: "#FF4444",
-				strokeWidth: 1,
-				strokeOpacity: 0.8
+				externalGraphic: "symbol_cultural_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicZIndex: 11,
+				graphicOpacity: 0.5
+				}) 
+				});
+				
+		style_all=new OpenLayers.StyleMap({"default": new OpenLayers.Style({
+				
+				externalGraphic: "symbol_mix_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				graphicOpacity:0.7
+				//graphicZIndex: 11,
+				}),
+				
+				"select": new OpenLayers.Style({
+				externalGraphic: "symbol_mix_cluster.png",
+				graphicWidth: 50,
+				graphicWidth: 50,
+				//graphicZIndex: 1111,
+				graphicOpacity: 1
 				}) 
 				});
 		
@@ -186,64 +209,72 @@ function init(){
 	
 	// section 1.3: load and add baselayers day and elevation
 	var administr= new OpenLayers.Layer.WMS("administrative", "https://qgiscloud.com/lolgiati/europe_scaledependence2/wms?", {layers: 'europe_scaledependence2', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	//var day= new OpenLayers.Layer.WMS("Day", "http://karlinapp.ethz.ch/cgi-bin/qgis_map_server/europa_diagram/qgis_mapserv.fcgi?", {layers: 'land_ocean_ice', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	//var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	var osm= new OpenLayers.Layer.WMS("OSmap", "http://129.206.228.72/cached/osm?", {layers: 'osm_auto:all', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
+	var osm_hillshade= new OpenLayers.Layer.WMS("Hillshade", "http://129.206.228.72/cached/hillshade?", {layers: 'europe_wms:hs_srtm_europa', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
 	
-	var elev= new OpenLayers.Layer.WMS("Elevation", "http://demo.cubewerx.com/demo/cubeserv/cubeserv.cgi?CONFIG=main&", {layers: 'Foundation.Gtopo30', styles: 'default', format: 'image/png', SRS: 'EPSG4258' },{tileSize: new OpenLayers.Size(512,512), buffer: 1 });
-	map.addLayers([administr,day,elev]);
+	
+	map.addLayers([administr,osm,osm_hillshade]);
 	
 	// section 1.4: load and add polygons from shapefile
 	var polygons=addVectorLayer(map, "europe", 'shapefiles/europe_1', { 
 		styleMap: style_pol,
-		//displayInLayerSwitcher: false,	
+		displayInLayerSwitcher: false,	
 	});
 	map.addLayers([polygons]);
 		
 	// section 1.5: load points with cluster strategies
 	// winter
-	var strategy = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var strategy = new OpenLayers.Strategy.Cluster({distance: 71, threshold: 2});
 	var layer_winter = new OpenLayers.Layer.Vector("Winter Locations", {
 		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy], // resfactor: defines how often new clustering is done dependent on resolution (1: for every zoom change)
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_winter.txt",
 			format: new OpenLayers.Format.Text()
 		}),
-		styleMap: style_winter
+		styleMap: style_winter,
+		displayInLayerSwitcher: false,	
 	});
 	layer_winter.setVisibility(false);
 	
 	// summer
-	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var strategy2 = new OpenLayers.Strategy.Cluster({distance: 71, threshold: 2});
 	var layer_summer = new OpenLayers.Layer.Vector("Summer Locations", {
 		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy2],
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_summer.txt",
 			format: new OpenLayers.Format.Text(),
 		}),
-		styleMap: style_summer
+		styleMap: style_summer,
+		displayInLayerSwitcher: false,	
 	});
 	layer_summer.setVisibility(false);
 	
 	// cultural
-	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 71, threshold: 2});
 	var layer_cultural = new OpenLayers.Layer.Vector("Cultural Locations", {
 		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
 		protocol: new OpenLayers.Protocol.HTTP({
 			url: "points_europe_cultural.txt",
 			format: new OpenLayers.Format.Text(),
+			text: "hallo",
 		}),
-		styleMap: style_cultural
+		styleMap: style_cultural,
+		displayInLayerSwitcher: false,	
 	});
 	layer_cultural.setVisibility(false);
 	// trial for clustering of different origins
 	
-	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 28, threshold: 2});
+	var strategy3 = new OpenLayers.Strategy.Cluster({distance: 71, threshold: 2});
 	var layer_2w = new OpenLayers.Layer.Vector("locations_all", {
 		strategies: [new OpenLayers.Strategy.BBOX({resFactor: 1}),strategy3],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "points_europe_sumwin.txt",
+			url: "points_europe_all.txt",
 			format: new OpenLayers.Format.Text(),
 		}),
-		styleMap: style_winter
+		styleMap: style_all,
+		displayInLayerSwitcher: false,	
 	});
 	
 	
@@ -254,15 +285,23 @@ function init(){
 	
 	//1.5.2 some more commands
 	//map.zoomToMaxExtent();
-	map.zoomToExtent(bounds);
+	
 	//map.setCenter([5,50],0.4,false,false);
 	//map.zoomToExtent(layer_2w.getDataExtent());
 	//map.addControl(new OpenLayers.Control.LayerSwitcher());
-	map.addControl(new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('europe_ls')}));
+	parent.document.getElementById("tab_europe-body").innerHTML="";
+	map.addControl(new OpenLayers.Control.LayerSwitcher({div:parent.document.getElementById("tab_europe-body")}));
 	map.addControl(new OpenLayers.Control.PanZoomBar);
 	map.addControl(new OpenLayers.Control.Navigation);
+	scaleline = new OpenLayers.Control.ScaleLine({maxWidth: 300});
 	
-
+	
+	map.addControl(scaleline);
+	scaleline.divisions="3";
+	scaleline.update();
+	map.zoomToExtent(bounds);
+	
+	
 	// section 1.6: Interactions definition
 	var highlightCtrl = new OpenLayers.Control.SelectFeature(polygons, {
 		hover: true,
@@ -340,33 +379,44 @@ function onPopupClose(evt) {
 function onFeatureSelect2(evt) {
 	feature=evt.feature;
 	var ress1='../Maps/maps/europe/flags/'+feature.data.values.CNTR_ID+'.png';
-	parent.document.getElementById("info_low-body").innerHTML ='<h1 style="margin:10px">'+feature.data.values.Full_name+"</h1>";
-	parent.document.getElementById("info_low-body").innerHTML +='<img  style="margin:10px" border="0" src='+ress1+' alt="'+feature.data.values.Full_name+'" width="200" >';
+	parent.document.getElementById("info_low-body").innerHTML ='<h1>'+feature.data.values.Full_name+"</h1>";
+	parent.document.getElementById("info_low-body").innerHTML +='<img src='+ress1+' alt="'+feature.data.values.Full_name+'" width="200" style="border:1px solid black">';
+	var searchname=feature.data.values.Full_name.replace(" ","+");
+	var searchname=searchname.replace(" ","+");
+	parent.document.getElementById("info_low-body").innerHTML +='<br><a href="http://www.wikipedia.org/wiki/Special:Search?search='+searchname+'" target="_blank">read more about '+feature.data.values.Full_name+' on Wikipedia</a>';
 	}
 
 function onFeatureSelect(evt) {
 	feature = evt.feature;
 	if (feature.cluster) {
-							var cc=	'<h4 style="margin:10px">'+feature.cluster.length+" Locations here:</h4>"
+							var cc=	'<h4>'+feature.cluster.length+" Locations here:</h4><ul>";
+							var cccont='<h3>'+feature.cluster.length+" Locations here:</h3><ul>";
 							for (var i=0; i<feature.cluster.length;i+=1) {
-								cc+='<a style="margin:10px">-'+feature.cluster[i].attributes.title+"</a><br>";
+								var subt="'subtext"+i+"'";
+								
+								cc+='<li><a href="../'+feature.cluster[i].attributes.title+'/'+feature.cluster[i].attributes.title+'.html">'+feature.cluster[i].attributes.title+"</a></li>";
+								cccont+='<li><font color="0000FF" style="cursor: pointer;" onClick=" ExpandCollapse('+subt+');">'+feature.cluster[i].attributes.title+'</font><p><div id="subtext'+i+'" style="display:none">'+feature.cluster[i].attributes.description+'<br><a href="http://www.google.com/#q='+feature.cluster[i].attributes.title+'" target="_blank">google it!</a></p></div></li>';
 							}
-							parent.document.getElementById("info_low-body").innerHTML =cc;
+							cc+='</ul>';
+							cccont+='</ul>';
+							
+							parent.document.getElementById("info_low-body").innerHTML =cccont;
 							
 							 }else {
-							 var cc="<h4>"+feature.attributes.title+"</h4>";
-							 var cc2='<h4 style="margin:10px">'+feature.attributes.title+"</h4>"+feature.attributes.description;
+							 var cc='<h4><a href="../'+feature.attributes.title+'/'+feature.attributes.title+'.html">'+feature.attributes.title+"</a></h4>";
+							 var cc2='<h4>'+feature.attributes.title+"</h4>"+feature.attributes.description+'<a href="http://www.google.com/#q='+feature.attributes.title+'" target="_blank">google it!</a>';
 							 parent.document.getElementById("info_low-body").innerHTML =cc2;
 							 };
 							 
-	 popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+	 popup = new OpenLayers.Popup.FramedCloud("chicken",
 					 feature.geometry.getBounds().getCenterLonLat(),
 					 null,
 					 cc,
 					 null,
-					 true);
+					 true
+					 );
 	popup.autoSize = true;
-    popup.maxSize = new OpenLayers.Size(400,400);	
+    popup.maxSize = new OpenLayers.Size(400,200);	
 
 	
 	feature.popup = popup;
