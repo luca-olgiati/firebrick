@@ -1086,7 +1086,7 @@ Ext.application({
 
 					{xtype: 'component', html: 'Official Bern City Guide App', cls:'x-form-check-group-label', margin: '0 0 0 10'},
 					{
-						boxLabel: 'Download the App',
+						boxLabel: 'Official Bern City Guide App',
 						name: 'cb-cultural-50',
 						inputValue: '50',
 						id: 'checkbox50',
